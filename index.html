@@ -564,7 +564,6 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
         <a class="chip" href="https://drive.google.com/file/d/1Qi8mfPiA0OhapTXiwKWckOHk8TOT19PJ/view?usp=sharing" target="_blank" rel="noopener">CV ↗</a>
       </div>
       <p class="email">Email <span id="email-text">shreeramsureshchandra@gmail.com</span><button class="btn btn-small" data-action="copy-email">Copy</button></p>
-      <p class="hint-touch small">Close this window to see the desktop.</p>
     </div>
   </section>
 
@@ -595,7 +594,6 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
           <p class="news-text">Gave a guest lecture, “History of TTS: from classical approaches to current expressive speech generation”, in Prof. Berrak Sisman's speech processing course at <b>Johns Hopkins University</b>.</p>
         </li>
       </ol>
-      <p class="hint-touch small">Close this window to see the desktop.</p>
     </div>
   </section>
 
@@ -1054,7 +1052,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   /* ---------- windows ---------- */
   const wins = $$('.win');
   const winById = Object.fromEntries(wins.map(w => [w.dataset.win, w]));
-  const DEFAULTS = { about: [.05, 18], news: [.6, 56], research: [.03, 22], reflections: [.28, 36], figure: [.1, 24], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
+  const DEFAULTS = { about: [.015, 16], news: [.62, 64], research: [.25, 36], reflections: [.28, 36], figure: [.1, 24], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
   const openers = {};
   let zTop = 10;
 
@@ -1665,8 +1663,9 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   /* ---------- restart, resize, first view ---------- */
   function initialState() {
-    if (!narrow()) openWin('research');
+    openWin('research');
     openWin('news');
+    openWin('about');
   }
   function restart() {
     wins.forEach(w => closeWin(w, true));
