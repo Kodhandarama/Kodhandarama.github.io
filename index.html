@@ -32,6 +32,10 @@
   --sky: #e3f1f6;
   --soil: #8a5a3b;
   --water: #4aa3e0;
+  --web-bg: #cbcbc6;
+  --web-ink: #111111;
+  --web-link: #0000ee;
+  --web-visited: #551a8b;
   --f-display: "Pixelify Sans", "Chicago", "Charcoal", ui-monospace, monospace;
   --f-body: "Atkinson Hyperlegible", "Geneva", "Verdana", system-ui, sans-serif;
   --f-mono: "VT323", "Monaco", ui-monospace, monospace;
@@ -43,7 +47,6 @@ html { height: 100%; box-sizing: border-box; }
 body {
   height: 100%; margin: 0; display: flex; flex-direction: column; overflow: hidden;
   background-color: var(--desk);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' fill='%236f8fb6'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%236f8fb6'/%3E%3C/svg%3E");
   color: var(--ink); font: 15px/1.55 var(--f-body); -webkit-font-smoothing: antialiased;
 }
 button { font: inherit; color: inherit; }
@@ -85,6 +88,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 /* ---------- desktop ---------- */
 .desktop {
   position: relative; z-index: 0; flex: 1; min-height: 0; overflow: hidden;
+  background: var(--desk-deep) url("wallpaper.jpg") 50% 62% / cover no-repeat;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 0;
@@ -126,6 +130,8 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 .sticky-grip { height: 12px; margin: 0 -12px 8px; border-bottom: 1px dashed var(--ink-2); cursor: grab; }
 .sticky p { margin: 0 0 6px; }
 .sticky p:last-child { margin: 0; }
+.photo-note { left: auto; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 118px); width: 196px; background: var(--paper); }
+.photo-note.is-moved { right: auto; }
 .touch-hint, .hint-touch { display: none; }
 
 /* ---------- windows ---------- */
@@ -172,7 +178,8 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
 #win-about { width: min(520px, calc(100% - 150px)); }
 #win-research { width: min(760px, calc(100% - 150px)); height: min(600px, calc(100% - 64px)); }
-#win-notes { width: min(580px, calc(100% - 150px)); height: min(540px, calc(100% - 80px)); }
+#win-reflections { width: min(720px, calc(100% - 150px)); height: min(620px, calc(100% - 48px)); }
+#win-figure { width: min(880px, calc(100% - 150px)); }
 #win-music { width: min(390px, calc(100% - 150px)); }
 #win-garden { width: min(620px, calc(100% - 150px)); }
 #win-beyond { width: min(640px, calc(100% - 150px)); height: min(620px, calc(100% - 64px)); }
@@ -223,8 +230,19 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 .card-title { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 3px 10px; border-bottom: 1px solid var(--ink); background: var(--chrome); }
 .card-title h3 { font: 600 16px/1.5 var(--f-display); margin: 0; }
 .card-venue { font: 13px var(--f-display); white-space: nowrap; }
-.card p { margin: 10px 12px 6px; max-width: 70ch; }
-.card-link { display: inline-block; margin: 0 12px 12px; font: 500 14px var(--f-display); }
+.card-main { display: grid; gap: 12px; padding: 12px; }
+.card-fig { display: grid; place-items: center; width: 100%; height: 210px; padding: 8px; border: 1px solid var(--ink); background: #ffffff; cursor: zoom-in; }
+.card-fig img { display: block; max-width: 100%; max-height: 192px; object-fit: contain; }
+.card-fig.is-empty { height: 72px; cursor: default; border-style: dashed; background: var(--paper); color: var(--muted); font: 13px var(--f-display); }
+.card-text p { margin: 0 0 8px; max-width: 70ch; }
+.card-link { display: inline-block; font: 500 14px var(--f-display); }
+.interests { list-style: none; margin: 0; padding: 0; }
+.interests li { display: flex; align-items: center; gap: 12px; padding: 8px 4px; border-bottom: 1px dotted var(--rule); }
+.interests li:last-child { border-bottom: 0; }
+.folder { width: 32px; height: 32px; flex: none; }
+.fig-body { background: #ffffff; }
+#fig-img { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+#fig-cap { margin: 12px 0 0; }
 .card-link.muted { color: var(--muted); }
 .year { margin-bottom: 18px; }
 .year h3 { display: flex; justify-content: space-between; align-items: baseline; font: 600 18px/1.4 var(--f-display); margin: 0 0 4px; border-bottom: 1px solid var(--ink); }
@@ -238,21 +256,26 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 .pub-venue { font-style: italic; }
 .pub-links { display: flex; gap: 10px; margin-top: 3px; font: 500 13px var(--f-display); }
 
-/* lab notes */
-.notes { font: 21px/1.2 var(--f-mono); background: var(--paper); }
-.mono-h { margin: 0 0 4px; padding-bottom: 4px; border-bottom: 3px double var(--ink); }
-.mono-sec { font: inherit; margin: 18px 0 6px; text-transform: lowercase; }
-.mono-sec::before { content: "## "; color: var(--muted); }
-.mono-list { list-style: none; margin: 0; padding: 0; }
-.mono-list li { padding-left: 1.4em; text-indent: -1.4em; }
-.mono-list li::before { content: "- "; padding-right: .4em; color: var(--muted); }
-.mono-intro { margin: 0 0 10px; color: var(--ink-2); }
-.entry { margin: 0 0 14px; }
-.entry p { margin: 2px 0 0 4.2em; color: var(--ink-2); }
-.tag { display: inline-block; width: 4em; }
-.tag-new { color: #b8341f; }
-.entry-q { display: flex; gap: 14px; align-items: flex-start; }
-.entry-q p { margin-left: 0; }
+/* reflections browser */
+.browser-bar { flex: none; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 6px 10px; border-bottom: 1px solid var(--ink); background: var(--chrome); }
+.btn:disabled { color: var(--muted); border-color: var(--muted); cursor: default; background: var(--paper); }
+.address { flex: 1; min-width: 180px; display: flex; align-items: center; gap: 6px; font: 13px var(--f-display); }
+.address output { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: #ffffff; border: 1px solid var(--ink); padding: 1px 6px; font: 17px/1.2 var(--f-mono); }
+.web { background: var(--web-bg); color: var(--web-ink); font: 17px/1.6 "Times New Roman", Times, Georgia, serif; padding: 18px 24px 28px; }
+.web h1 { font: 700 30px/1.15 "Times New Roman", Times, Georgia, serif; margin: 0 0 10px; text-wrap: balance; }
+.web p { max-width: 64ch; margin: 0 0 14px; }
+.web a { color: var(--web-link); }
+.web a:visited { color: var(--web-visited); }
+.web a:hover { background: none; color: #cc0000; text-decoration: underline; }
+.web hr { border: 0; border-top: 1px solid #8a8a86; border-bottom: 1px solid #f2f2ee; margin: 18px 0; }
+.web .aside { font-style: italic; color: #3a3a3a; }
+.web .meta, .web .crumb { font: 14px var(--f-display); color: #3a3a3a; }
+.web-list { list-style: square; margin: 0; padding-left: 22px; max-width: 64ch; }
+.web-list li { margin-bottom: 16px; }
+.web-list .qrow { list-style: none; display: flex; align-items: center; gap: 14px; margin-left: -22px; }
+.new { font: 700 12px/1 var(--f-display); color: #ffffff; background: #d1462f; padding: 2px 5px; vertical-align: 2px; }
+.under-construction { height: 10px; max-width: 220px; margin: 5px 0 6px; border: 1px solid var(--ink); background: repeating-linear-gradient(-45deg, #f2c12e 0 8px, var(--ink) 8px 16px); }
+.status-bar { flex: none; display: flex; justify-content: space-between; gap: 10px; padding: 2px 10px; border-top: 1px solid var(--ink); background: var(--chrome); font: 13px/1.6 var(--f-display); white-space: nowrap; overflow: hidden; }
 .qblock {
   flex: none; width: 44px; height: 44px; border: 2px solid var(--ink); background: #f2b632;
   box-shadow: inset -3px -3px 0 #b97a12, inset 3px 3px 0 #fbe08a; font: 700 26px/1 var(--f-display); color: var(--paper);
@@ -370,8 +393,10 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   .job { grid-template-columns: minmax(0, 1fr); }
   .page { padding: 16px; }
   .cv-body { padding: 10px; }
-  .notes { font-size: 20px; }
-  .entry p { margin-left: 0; }
+  .desktop { background-image: url("wallpaper-small.jpg"); background-position: 58% 70%; }
+  .photo-note { right: auto; margin-top: 12px; }
+  .web { padding: 14px 14px 22px; font-size: 16px; }
+  .address { min-width: 100%; }
 }
 @media (pointer: coarse) {
   .desk-hint { display: none; }
@@ -391,7 +416,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
         <button role="menuitem" data-action="open:about">About Shreeram…</button>
         <hr>
         <button role="menuitem" data-action="open:research">Research.app</button>
-        <button role="menuitem" data-action="open:notes">Lab Notes.txt</button>
+        <button role="menuitem" data-action="open:reflections">Reflections.html</button>
         <button role="menuitem" data-action="open:music">Currently Listening.mp3</button>
         <button role="menuitem" data-action="open:garden">Garden.app</button>
         <button role="menuitem" data-action="open:beyond">Beyond Work.exe</button>
@@ -445,7 +470,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   <div class="icons" id="icons">
     <button class="icon" data-open="about"><span class="icon-img" data-icon="about"></span><span class="icon-label">About Me</span></button>
     <button class="icon" data-open="research"><span class="icon-img" data-icon="research"></span><span class="icon-label">Research<wbr>.app</span></button>
-    <button class="icon" data-open="notes"><span class="icon-img" data-icon="notes"></span><span class="icon-label">Lab Notes<wbr>.txt</span></button>
+    <button class="icon" data-open="reflections"><span class="icon-img" data-icon="browser"></span><span class="icon-label">Reflections<wbr>.html</span></button>
     <button class="icon" data-open="music"><span class="icon-img" data-icon="music"></span><span class="icon-label">Currently Listening<wbr>.mp3</span></button>
     <button class="icon" data-open="garden"><span class="icon-img" data-icon="garden"></span><span class="icon-label">Garden<wbr>.app</span></button>
     <button class="icon" data-open="beyond"><span class="icon-img" data-icon="bat"></span><span class="icon-label">Beyond Work<wbr>.exe</span></button>
@@ -458,6 +483,11 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     <p><b>Hi, I'm Shreeram.</b> I work on expressive speech synthesis.</p>
     <p class="desk-hint">Double-click an icon to open it. Drag windows by their striped title bars.</p>
     <p class="touch-hint">Tap an icon to open it.</p>
+  </aside>
+  <aside class="sticky photo-note" id="hike-note">
+    <div class="sticky-grip" aria-hidden="true"></div>
+    <p><b>Desktop picture</b></p>
+    <p>From my latest hike in Shenandoah National Park.</p>
   </aside>
 
   <!-- About -->
@@ -503,45 +533,63 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
       <div class="seg" role="tablist" aria-label="Research views">
         <button role="tab" id="tab-projects" aria-controls="panel-projects" aria-selected="true">Projects</button>
         <button role="tab" id="tab-pubs" aria-controls="panel-pubs" aria-selected="false">Publications</button>
+        <button role="tab" id="tab-interests" aria-controls="panel-interests" aria-selected="false">Interests</button>
       </div>
       <label class="check" id="first-wrap" hidden><input type="checkbox" id="first-only"> First author only</label>
     </div>
     <div class="win-info"><span id="research-count"></span><a href="https://scholar.google.com/citations?user=ocSWiUYAAAAJ&amp;hl=en&amp;oi=sra" target="_blank" rel="noopener">Google Scholar ↗</a></div>
-    <div class="win-body">
+    <div class="win-body research-body">
       <div id="panel-projects" role="tabpanel" aria-labelledby="tab-projects"><div class="cards" id="cards"></div></div>
       <div id="panel-pubs" role="tabpanel" aria-labelledby="tab-pubs" hidden><div id="pub-list"></div></div>
+      <div id="panel-interests" role="tabpanel" aria-labelledby="tab-interests" hidden><ul class="interests" id="interests"></ul></div>
     </div>
   </section>
 
-  <!-- Lab notes -->
-  <section class="win" id="win-notes" data-win="notes" data-app="Lab Notes" role="dialog" aria-labelledby="t-notes" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-notes">Lab Notes.txt</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
-    <div class="win-body notes">
-      <p class="mono-h">LAB NOTES.txt</p>
-      <h3 class="mono-sec">ideas i'm exploring</h3>
-      <ul class="mono-list">
-        <li>expressive and controllable speech synthesis</li>
-        <li>controlling emotion, style and speaker identity with natural language and weak supervision</li>
-        <li>linking speech, language and affect with contrastive and retrieval-based learning</li>
-        <li>evaluating controllable and instruction-guided speech synthesis</li>
-        <li>robust speech generation with limited or imperfect data</li>
-        <li>low-latency, intelligible brain-to-speech synthesis for assistive communication</li>
-      </ul>
-      <h3 class="mono-sec">reflections</h3>
-      <p class="mono-intro">A growing series of essays and notes on research, the PhD, and everything in between.</p>
-      <article class="entry">
-        <span class="tag tag-new">[NEW]</span><a href="https://docs.google.com/document/d/1RBWPOsZLMTVw3zgUc5bhXz6_UyOk_1DWbEAc0tzxUcQ/edit?usp=sharing" target="_blank" rel="noopener">What does it take to be happy, huh?</a>
-        <p>A haircut in Hampden, a barber who used to teach science, and why happiness might be a choice rather than a reward.</p>
-      </article>
-      <article class="entry">
-        <span class="tag">[...]</span><b>Next level loading...</b>
-        <p>The next reflection is being written. Check back soon.</p>
-      </article>
-      <article class="entry entry-q">
-        <button class="qblock" id="qblock" aria-label="Hit the question block">?</button>
-        <div><b>? Block</b><p id="qblock-msg" aria-live="polite">Something is hiding in this block. Hit it again later.</p></div>
+  <!-- Reflections: a small web browser -->
+  <section class="win" id="win-reflections" data-win="reflections" data-app="Reflections" role="dialog" aria-labelledby="t-reflections" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-reflections">Reflections.html</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="browser-bar">
+      <button class="btn btn-small" id="web-back" disabled>◀ Back</button>
+      <button class="btn btn-small" id="web-fwd" disabled>Forward ▶</button>
+      <button class="btn btn-small" id="web-home">Home</button>
+      <div class="address"><span>Location:</span><output id="web-url">shreeram://reflections/</output></div>
+    </div>
+    <div class="win-body web" id="web-body">
+      <div data-webpage="home">
+        <h1>Reflections</h1>
+        <p>A growing series of essays and notes on research, the PhD, and everything in between.</p>
+        <hr>
+        <ul class="web-list">
+          <li><a href="#" data-go="happiness">What does it take to be happy, huh?</a> <span class="new">NEW!</span><br>A haircut in Hampden, a barber who used to teach science, and why happiness might be a choice rather than a reward.</li>
+          <li><b>Next level loading...</b><div class="under-construction" aria-hidden="true"></div>The next reflection is being written. Check back soon.</li>
+          <li class="qrow"><button class="qblock" id="qblock" aria-label="Hit the question block">?</button><span><b>? Block</b><br><span id="qblock-msg" aria-live="polite">Something is hiding in this block. Hit it again later.</span></span></li>
+        </ul>
+      </div>
+      <article data-webpage="happiness" hidden>
+        <p class="crumb"><a href="#" data-go="home">Reflections</a> › Happiness</p>
+        <h1>What does it take to be happy, huh?</h1>
+        <p class="meta">897 words · about 4 minutes</p>
+        <p>I recently moved to Baltimore 2 months back (long story - worth telling another day) and it had been a super long time since I had gotten my hair cut. 3 months.  Even though it didn’t look like it. I tell you - I could feel the weight, the expectations (jk).</p>
+        <p>Nevertheless, I was waiting to get this one conference deadline off my back and now that it was done, I had no excuse to not get my hair cut.</p>
+        <p>After taking a bunch of recommendations from my few representative friends in Baltimore, I decided to go to Hampden, which is just one of the coolest places, don’t ever let anyone tell you otherwise.</p>
+        <p>Old Bank barbers. Recommend 100%.</p>
+        <p>I’ve found in my 20+ years of getting haircuts, that barbers have the ability to enter your headspace in more than one way.</p>
+        <p class="aside">Something about how vulnerable you turn out when you hand over your front end appearance to another person</p>
+        <p>But I’ve found it hard to be pretentious/diplomatic when soemone is <em>this</em> close to shaving off my ear. And Ky was no different. While we initially spoke about how I apparently <em>need</em> to try out the Baltimore crabs, the conversation quickly shifted to far more important topics. Turns out Ky was a middle school science teacher but 4 years back he decided that he was not happy, and somehow he found a way to be happy - going to barbering school (this was a culture shock to me!) and becoming a hair-dresser. But - this brought me back to an over-whelming question.</p>
+        <p>Happiness! A question that has occupied my mind for a good part of the last year or so. I’ve always tried to reason my path to happiness - because for sure I know that when I am happy, I like my life. I like waking up. I like to plan to achieve something everyday. I also enjoy my progress at the end of the day. Conversely, I’ve seen that nothing can change how I perceive my life. Self-doubt. Dissatisfication. All of them creep in. And nothing is ever enough to feel better than what I felt before I did anything. So - yes - happiness is essential, it is a must. We must plan to <em>achieve</em> happiness right?  This is where I thought I had an answer, because I remember the feeling of joy everytime I am able to prove my hypothesis at research work. And man! that feeling is powerful! A thought that emerged in your head is now better than thoughts that have previously emerged in other heads!? And hence, I started chasing this feeling of joy, because, of course, if I am able to do this, I <em>feel</em> feel joy right? And this happiness will finally hit my brain? And then I can feel good! Right?</p>
+        <p>Well, turns out that conditional approaches have an obvious problem. Because now, I need to make sure that my condition of obtaining <em>results</em> in my work was satisfied before I chose to feel joy. So, I pursued this goal, postponing the feeling of joy for whenever I deserve feeling it.</p>
+        <p>6 months of joy-less days pass and I am now wondering - what is all this worth? Is the eventual happiness going to be so great? Will I be able to re-capture my 6 months of non-joy? And, by the way, this approach also has another inevitable flaw - which in retrospective is something I am grateful for. Productivity. Trying to get work done when you are not choosing to be happy is just a whole crapshoot of mind-fog. So, while I got a <em>lot</em> of work done, I still wasn’t able to prove my hypothesis and by manner of my own choice, I felt the constant lack of joy. Ok - as a cautionary to being melodramatic, I will add that - here, I speak about happiness as a global function. Happiness (to me) is a hierarchial feeling. One that exists in fleeting moments, in phases and, in days. The fleeting feeling is often created, as a matter of circumstance. You turn up at a lunch table where the topic shifts towards something you relate to, you feel the little sparks of joy in your brain-thingy. You choose to play tennis one evening - you meet friends (who are all equally frustrated - albeit by corporate jobs) and you hit yellow fuzzy balls - tada! 2 hours worth of sparky sparks. And the eventual global state of happiness - consider this the answer to “Are you happy?” asked to you randomly, during multiple trials and aggregated. An interesting observation is that as you move from local states of joy to more long-form settings, the proactive-choice you need to make just becomes that much more essential. Which leads me to this - recognising that happiness is just another choice you can take - every day, every moment, every way possible. Choose it. For yourself.  For people around you. You can be happy when you are overwhelmed, you can be happy when nothing goes right on the day. And you can be happy, when you face moments of sadness - perhaps in the way of recognising that there is more happiness to look forward to than the sadness you currently feel. Because - afterall - what <em>is</em> the point of being sad no?</p>
+        <hr>
+        <p><a href="#" data-go="home">◀ Back to Reflections</a></p>
       </article>
     </div>
+    <div class="status-bar"><span id="web-status">Document: Done</span><span id="web-meta"></span></div>
+  </section>
+
+  <!-- Figure viewer -->
+  <section class="win" id="win-figure" data-win="figure" data-app="Figure" role="dialog" aria-labelledby="t-figure" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-figure">Figure</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-body fig-body"><img id="fig-img" alt=""><p id="fig-cap" class="small"></p></div>
   </section>
 
   <!-- Currently listening -->
@@ -601,7 +649,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
         <section class="tile">
           <h3>Writing</h3>
           <p>Sometimes I pick up a pen or a keyboard and write the occasional essay.</p>
-          <button class="btn btn-small" data-action="open:notes">Read Lab Notes</button>
+          <button class="btn btn-small" data-action="open:reflections">Read my reflections</button>
         </section>
       </div>
       <section class="nets" aria-labelledby="nets-title">
@@ -694,7 +742,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   const EMAIL = 'shreeramsureshchandra@gmail.com';
 
   /* ---------- pixel icons: 16x16 maps, one character per pixel ---------- */
-  const PAL = { k: '#17171c', w: '#ffffff', c: '#eadfc4', g: '#a9a39a', G: '#5f5a55', m: '#a6efc8', b: '#2f5fd0', y: '#f6e27f', r: '#d1462f', n: '#c0673d', N: '#7a4a2a', e: '#58a84f', E: '#2f6b32' };
+  const PAL = { k: '#17171c', w: '#ffffff', c: '#eadfc4', g: '#a9a39a', G: '#5f5a55', m: '#a6efc8', b: '#2f5fd0', y: '#f6e27f', r: '#d1462f', n: '#c0673d', N: '#7a4a2a', e: '#58a84f', E: '#2f6b32', F: '#b9c4f0' };
   const ICONS = {
     about: [
       '................', '..kkkkkkkkkkkk..', '..kcccccccccck..', '..kckkkkkkkkck..',
@@ -708,11 +756,17 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
       '..kwbbbbbbbbwk..', '..kbbbbbbbbbbk..', '..kwbbbbbbbbwk..', '..kwwbwbbwbwwk..',
       '..kwwwwbwwwwwk..', '..kwwwwwwwwwwk..', '..kkkkkkkkkkkk..', '................'
     ],
-    notes: [
-      '................', '..kkkkkkkkkkkk..', '..krrrrrrrrrrk..', '..kkkkkkkkkkkk..',
-      '..kyyyyyyyyyyk..', '..kyGGGGGGGyyk..', '..kyyyyyyyyyyk..', '..kyGGGGGGGGyk..',
-      '..kyyyyyyyyyyk..', '..kyGGGGGyyyyk..', '..kyyyyyyyyyyk..', '..kyGGGGGGGyyk..',
-      '..kyyyyyyyyyyk..', '..kyyyyyyyyyyk..', '..kkkkkkkkkkkk..', '................'
+    browser: [
+      '................', '.kkkkkkkkkkkkkk.', '.kGGGGGGGGGGGGk.', '.kkkkkkkkkkkkkk.',
+      '.kwwwwwwwwwwwwk.', '.kwwwwbbbbwwwwk.', '.kwwwbbeebbwwwk.', '.kwwbbeeeebbwwk.',
+      '.kwwbbbeebbbwwk.', '.kwwbeebbbbbwwk.', '.kwwwbeebbbwwwk.', '.kwwwwbbbbwwwwk.',
+      '.kwwwwwwwwwwwwk.', '.kggggggggggggk.', '.kkkkkkkkkkkkkk.', '................'
+    ],
+    folder: [
+      '................', '................', '..kkkkk.........', '.kFFFFFk........',
+      '.kFFFFFFkkkkkkk.', '.kFFFFFFFFFFFFk.', '.kkkkkkkkkkkkkk.', '.kFFFFFFFFFFFFk.',
+      '.kFFFFFFFFFFFFk.', '.kFFFFFFFFFFFFk.', '.kFFFFFFFFFFFFk.', '.kFFFFFFFFFFFFk.',
+      '.kFFFFFFFFFFFFk.', '.kkkkkkkkkkkkkk.', '................', '................'
     ],
     music: [
       '................', '......kkkkkkkk..', '......kkkkkkkk..', '......k......k..',
@@ -785,11 +839,27 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   /* ---------- content ---------- */
   const PROJECTS = [
-    { t: 'Brain2Speech-Net', v: 'arXiv 2026', d: 'Intelligible brain-to-speech synthesis from intracortical neural signals, generated directly from neural activity faster than real time and without a text-decoding step.', u: 'https://arxiv.org/abs/2609.04455' },
+    { t: 'Brain2Speech-Net', v: 'arXiv 2026', d: 'Intelligible brain-to-speech synthesis from intracortical neural signals, generated directly from neural activity faster than real time and without a text-decoding step.', u: 'https://arxiv.org/abs/2609.04455',
+      img: 'projects/brain2speech.webp', alt: 'Brain2Speech-Net pipeline diagram, from neural recording to generated speech waveform',
+      cap: 'From a neural recording to a speech waveform: brain content and frame encoders, a deep-HMM aligner that finds phoneme segments, and a flow-based speech decoder. No text is decoded along the way.' },
     { t: 'StyleInstructCaps', v: 'AACL 2026', d: 'The first benchmark for controllable speaking-style captioning in audio-language models: a 2.9k-hour corpus, six caption types per utterance and a human-validated LLM judge.', u: null },
-    { t: 'EmotionRankCLAP', v: 'Interspeech 2025', d: 'A contrastive language-audio model that aligns natural-language speaking-style captions with emotional speech using Rank-N-Contrast over valence and arousal, preserving the ordinal structure of emotion.', u: 'https://arxiv.org/abs/2505.23732' },
-    { t: 'SelectTTS', v: 'arXiv 2024', d: 'Low-complexity text-to-speech for unseen speakers. Instead of training a speaker model, it selects frames from the target speaker’s own speech using discrete speech units.', u: 'https://arxiv.org/abs/2408.17432' },
-    { t: 'TEmoTTS', v: 'Odyssey 2024', d: 'Emotional TTS without emotion labels. A language model maps the spoken text to a point in an unsupervised style-token space, so the words themselves drive expressive prosody.', u: 'https://arxiv.org/abs/2405.11413' }
+    { t: 'EmotionRankCLAP', v: 'Interspeech 2025', d: 'A contrastive language-audio model that aligns natural-language speaking-style captions with emotional speech using Rank-N-Contrast over valence and arousal, preserving the ordinal structure of emotion.', u: 'https://arxiv.org/abs/2505.23732',
+      img: 'projects/emotionrankclap.webp', alt: 'EmotionRankCLAP diagram of speech and caption pairs ranked by valence and arousal',
+      cap: '(a) A batch of speech and caption pairs with valence and arousal labels. (b) How Rank-N-Contrast builds the positive and negative pairs across the two modalities.' },
+    { t: 'SelectTTS', v: 'arXiv 2024', d: 'Low-complexity text-to-speech for unseen speakers. Instead of training a speaker model, it selects frames from the target speaker’s own speech using discrete speech units.', u: 'https://arxiv.org/abs/2408.17432',
+      img: 'projects/selecttts.webp', alt: 'SelectTTS frame selection diagram with text and speech unit tokenizers and a WavLM encoder',
+      cap: 'Frame selection: text and the target speaker’s speech are both turned into semantic units, matched by sub-sequence, and the matching WavLM frames are picked out.' },
+    { t: 'TEmoTTS', v: 'Odyssey 2024', d: 'Emotional TTS without emotion labels. A language model maps the spoken text to a point in an unsupervised style-token space, so the words themselves drive expressive prosody.', u: 'https://arxiv.org/abs/2405.11413',
+      img: 'projects/temotts.webp', alt: 'TEmoTTS two-stage diagram with global style tokens and a language model',
+      cap: 'Stage 1 learns global style tokens from speech. Stage 2 trains a language model and an adaptation module to predict those style weights from the text alone.' }
+  ];
+  const INTERESTS = [
+    'Expressive and controllable speech synthesis',
+    'Controlling emotion, style and speaker identity with natural language and weak supervision',
+    'Linking speech, language and affect with contrastive and retrieval-based learning',
+    'Evaluating controllable and instruction-guided speech synthesis',
+    'Robust speech generation with limited or imperfect data',
+    'Low-latency, intelligible brain-to-speech synthesis for assistive communication'
   ];
   const ax = id => [['Paper', 'https://arxiv.org/abs/' + id]];
   const PUBS = [
@@ -818,12 +888,15 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   ];
   const link = (u, text, cls = '') => `<a${cls ? ` class="${cls}"` : ''} href="${u}" target="_blank" rel="noopener">${text}</a>`;
 
-  $('#cards').innerHTML = PROJECTS.map(p => `
+  $('#cards').innerHTML = PROJECTS.map((p, i) => `
     <article class="card">
       <header class="card-title"><h3>${p.t}</h3><span class="card-venue">${p.v}</span></header>
-      <p>${p.d}</p>
-      ${p.u ? link(p.u, 'Read the paper ↗', 'card-link') : '<span class="card-link muted">Website coming soon</span>'}
+      <div class="card-main">
+        ${p.img ? `<button class="card-fig" data-fig="${i}" aria-label="Enlarge the ${p.t} figure"><img src="${p.img}" alt="${p.alt}" loading="lazy"></button>` : '<div class="card-fig is-empty">Figure coming soon</div>'}
+        <div class="card-text"><p>${p.d}</p>${p.u ? link(p.u, 'Read the paper ↗', 'card-link') : '<span class="card-link muted">Website coming soon</span>'}</div>
+      </div>
     </article>`).join('');
+  $('#interests').innerHTML = INTERESTS.map(t => `<li><span class="folder">${pixelSVG(ICONS.folder)}</span><span>${t}</span></li>`).join('');
 
   const bold = s => s.replace(/Chandra, S\. S\.\*?/g, m => `<b>${m}</b>`);
   let pubShown = PUBS.length;
@@ -840,11 +913,11 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     updateResearchInfo();
   }
   function updateResearchInfo() {
-    const pubsOn = $('#tab-pubs').getAttribute('aria-selected') === 'true';
-    $('#first-wrap').hidden = !pubsOn;
-    $('#research-count').textContent = pubsOn
+    const tab = $$('#win-research [role="tab"]').find(t => t.getAttribute('aria-selected') === 'true').id;
+    $('#first-wrap').hidden = tab !== 'tab-pubs';
+    $('#research-count').textContent = tab === 'tab-pubs'
       ? `${pubShown} items${$('#first-only').checked ? ' as first author' : ''} · 2020–2026`
-      : `${PROJECTS.length} projects · newest first`;
+      : tab === 'tab-interests' ? `${INTERESTS.length} research interests` : `${PROJECTS.length} projects · newest first`;
   }
   $('#first-only').addEventListener('change', renderPubs);
   $$('[role="tab"]').forEach(tab => tab.addEventListener('click', () => {
@@ -876,7 +949,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   /* ---------- windows ---------- */
   const wins = $$('.win');
   const winById = Object.fromEntries(wins.map(w => [w.dataset.win, w]));
-  const DEFAULTS = { about: [.05, 18], research: [.24, 40], notes: [.3, 64], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
+  const DEFAULTS = { about: [.05, 18], research: [.24, 40], reflections: [.28, 36], figure: [.1, 24], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
   const openers = {};
   let zTop = 10;
 
@@ -1032,9 +1105,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   function cleanUp() {
     frozen = false;
     deskIcons().forEach(i => { i.classList.remove('is-free', 'is-selected'); i.style.left = ''; i.style.top = ''; });
-    const s = $('#sticky');
-    s.classList.remove('is-moved');
-    s.style.left = ''; s.style.top = '';
+    $$('#sticky, #hike-note').forEach(n => { n.classList.remove('is-moved'); n.style.left = ''; n.style.top = ''; });
   }
   let lastPointer = 'mouse';
   document.addEventListener('pointerdown', e => { lastPointer = e.pointerType; }, true);
@@ -1054,12 +1125,11 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     });
     icon.addEventListener('dblclick', () => openWin(icon.dataset.open, icon));
   });
-  const sticky = $('#sticky');
-  draggable(sticky, sticky, () => {
-    sticky.style.left = sticky.offsetLeft + 'px';
-    sticky.style.top = sticky.offsetTop + 'px';
-    sticky.classList.add('is-moved');
-  });
+  $$('#sticky, #hike-note').forEach(note => draggable(note, note, () => {
+    note.style.left = note.offsetLeft + 'px';
+    note.style.top = note.offsetTop + 'px';
+    note.classList.add('is-moved');
+  }));
   desk.addEventListener('pointerdown', e => {
     if (e.target === desk || e.target === iconsBox) deskIcons().forEach(i => i.classList.remove('is-selected'));
   });
@@ -1143,7 +1213,51 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   tick();
   setInterval(tick, 15000);
 
-  /* ---------- lab notes: the ? block ---------- */
+  /* ---------- figure viewer ---------- */
+  function openFigure(i, from) {
+    const p = PROJECTS[i];
+    if (!p || !p.img) return;
+    const img = $('#fig-img');
+    img.src = p.img;
+    img.alt = p.alt;
+    $('#t-figure').textContent = `${p.t} figure`;
+    $('#fig-cap').textContent = p.cap;
+    openWin('figure', from);
+  }
+  $('#cards').addEventListener('click', e => { const b = e.target.closest('[data-fig]'); if (b) openFigure(+b.dataset.fig, b); });
+
+  /* ---------- reflections: a tiny browser with its own history ---------- */
+  const PAGES = {
+    home: { url: 'shreeram://reflections/', meta: '3 entries' },
+    happiness: { url: 'shreeram://reflections/what-does-it-take-to-be-happy', meta: '897 words · about 4 min' }
+  };
+  const web = { stack: ['home'], i: 0 };
+  function showPage(id, push) {
+    if (!PAGES[id]) return;
+    if (push) { web.stack = web.stack.slice(0, web.i + 1); web.stack.push(id); web.i = web.stack.length - 1; }
+    $$('[data-webpage]').forEach(pg => { pg.hidden = pg.dataset.webpage !== id; });
+    $('#web-url').textContent = PAGES[id].url;
+    $('#web-meta').textContent = PAGES[id].meta;
+    $('#web-status').textContent = 'Document: Done';
+    $('#web-back').disabled = web.i === 0;
+    $('#web-fwd').disabled = web.i >= web.stack.length - 1;
+    $('#web-body').scrollTop = 0;
+  }
+  const webBody = $('#web-body');
+  webBody.addEventListener('click', e => {
+    const a = e.target.closest('[data-go]');
+    if (!a) return;
+    e.preventDefault();
+    if (a.dataset.go !== web.stack[web.i]) showPage(a.dataset.go, true);
+  });
+  webBody.addEventListener('mouseover', e => { const a = e.target.closest('[data-go]'); if (a) $('#web-status').textContent = PAGES[a.dataset.go].url; });
+  webBody.addEventListener('mouseout', e => { if (e.target.closest('[data-go]')) $('#web-status').textContent = 'Document: Done'; });
+  $('#web-back').addEventListener('click', () => { if (web.i > 0) { web.i--; showPage(web.stack[web.i]); } });
+  $('#web-fwd').addEventListener('click', () => { if (web.i < web.stack.length - 1) { web.i++; showPage(web.stack[web.i]); } });
+  $('#web-home').addEventListener('click', () => { if (web.stack[web.i] !== 'home') showPage('home', true); });
+  showPage('home');
+
+  /* ---------- the ? block ---------- */
   let hits = 0;
   $('#qblock').addEventListener('click', e => {
     const b = e.currentTarget;
