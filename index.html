@@ -157,13 +157,21 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   font: 500 14px/21px var(--f-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: calc(100% - 76px);
 }
 .win-close, .win-zoom {
-  position: absolute; top: 4px; z-index: 1; width: 13px; height: 13px; padding: 0;
+  position: absolute; top: 3px; z-index: 1; width: 15px; height: 15px; padding: 0;
   border: 1px solid var(--ink); background: var(--chrome); box-shadow: 0 0 0 2px var(--chrome); cursor: pointer;
 }
 .win-close { left: 9px; }
 .win-zoom { right: 9px; }
-.win-zoom::after { content: ""; position: absolute; left: 0; top: 0; width: 6px; height: 6px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.win-zoom::after { content: ""; position: absolute; left: 0; top: 0; width: 7px; height: 7px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
 .win-close:active, .win-zoom:active { background: var(--ink); }
+.win-close::before, .win-close::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 11px; height: 2px;
+  background: var(--ink); transform: translate(-50%, -50%) rotate(45deg);
+}
+.win-close::after { transform: translate(-50%, -50%) rotate(-45deg); }
+.win-close:hover { background: var(--ink); }
+.win-close:hover::before, .win-close:hover::after, .win-close:active::before, .win-close:active::after { background: var(--paper); }
+.win:not(.is-front) .win-close::before, .win:not(.is-front) .win-close::after { background: var(--muted); }
 .win:not(.is-front) .win-title::before { display: none; }
 .win:not(.is-front) .win-name { color: var(--muted); }
 .win:not(.is-front) .win-close, .win:not(.is-front) .win-zoom { border-color: var(--muted); }
@@ -505,7 +513,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   <aside class="sticky" id="sticky">
     <div class="sticky-grip" aria-hidden="true"></div>
     <p><b>Hi, I'm Shreeram.</b> I work on expressive speech synthesis.</p>
-    <p class="desk-hint">Double-click an icon to open it. Drag windows by their striped title bars.</p>
+    <p class="desk-hint">Double-click an icon to open it. Drag windows by their striped title bars, and close them with the × box.</p>
     <p class="touch-hint">Tap an icon to open it.</p>
   </aside>
   <aside class="sticky photo-note" id="hike-note">
@@ -516,7 +524,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   <!-- About -->
   <section class="win" id="win-about" data-win="about" data-app="About" role="dialog" aria-labelledby="t-about" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-about">About Shreeram</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-about">About Shreeram</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-body about">
       <div class="about-head">
         <img class="about-photo" src="photo.jpg" alt="Shreeram Chandra" width="96" height="96">
@@ -562,7 +570,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   <!-- News -->
   <section class="win" id="win-news" data-win="news" data-app="News" role="dialog" aria-labelledby="t-news" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-news">News.app</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-news">News.app</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-info"><span>4 items · newest first</span><span>2026</span></div>
     <div class="win-body">
       <ol class="news-list">
@@ -587,12 +595,13 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
           <p class="news-text">Gave a guest lecture, “History of TTS: from classical approaches to current expressive speech generation”, in Prof. Berrak Sisman's speech processing course at <b>Johns Hopkins University</b>.</p>
         </li>
       </ol>
+      <p class="hint-touch small">Close this window to see the desktop.</p>
     </div>
   </section>
 
   <!-- Research -->
   <section class="win" id="win-research" data-win="research" data-app="Research" role="dialog" aria-labelledby="t-research" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-research">Research.app</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-research">Research.app</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-toolbar">
       <div class="seg" role="tablist" aria-label="Research views">
         <button role="tab" id="tab-projects" aria-controls="panel-projects" aria-selected="true">Projects</button>
@@ -611,7 +620,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   <!-- Reflections: a small web browser -->
   <section class="win" id="win-reflections" data-win="reflections" data-app="Reflections" role="dialog" aria-labelledby="t-reflections" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-reflections">Reflections.html</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-reflections">Reflections.html</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="browser-bar">
       <button class="btn btn-small" id="web-back" disabled>◀ Back</button>
       <button class="btn btn-small" id="web-fwd" disabled>Forward ▶</button>
@@ -652,13 +661,13 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   <!-- Figure viewer -->
   <section class="win" id="win-figure" data-win="figure" data-app="Figure" role="dialog" aria-labelledby="t-figure" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-figure">Figure</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-figure">Figure</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-body fig-body"><img id="fig-img" alt=""><p id="fig-cap" class="small"></p></div>
   </section>
 
   <!-- Currently listening -->
   <section class="win" id="win-music" data-win="music" data-app="Listening" role="dialog" aria-labelledby="t-music" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-music">Currently Listening.mp3</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-music">Currently Listening.mp3</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-body">
       <div class="lcd" id="lcd">
         <div class="lcd-row"><span>NOW PLAYING</span><span id="lcd-time">0:00 / 0:00</span></div>
@@ -678,7 +687,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   <!-- Garden -->
   <section class="win" id="win-garden" data-win="garden" data-app="Garden" role="dialog" aria-labelledby="t-garden" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-garden">Garden.app</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-garden">Garden.app</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-info"><span id="garden-day">Day 1</span><span>Click a plot to water it</span></div>
     <div class="win-body">
       <p class="draft">Draft: example plants for now.</p>
@@ -692,7 +701,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   <!-- Beyond work -->
   <section class="win" id="win-beyond" data-win="beyond" data-app="Beyond Work" role="dialog" aria-labelledby="t-beyond" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-beyond">Beyond Work.exe</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-beyond">Beyond Work.exe</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-body">
       <div class="tiles">
         <section class="tile">
@@ -732,7 +741,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   <!-- CV -->
   <section class="win" id="win-cv" data-win="cv" data-app="CV" role="dialog" aria-labelledby="t-cv" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-cv">CV.pdf</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-cv">CV.pdf</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-body cv-body">
       <article class="page">
         <h2>Shreeram Chandra</h2>
@@ -762,7 +771,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   <!-- Trash -->
   <section class="win" id="win-trash" data-win="trash" data-app="Trash" role="dialog" aria-labelledby="t-trash" tabindex="-1" hidden>
-    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-trash">Trash</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-trash">Trash</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-info"><span>2 items</span><span>nothing here is really trash</span></div>
     <div class="win-body">
       <div class="table-wrap">
@@ -936,7 +945,9 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     { t: 'Brain2Speech-Net', v: 'arXiv 2026', d: 'Intelligible brain-to-speech synthesis from intracortical neural signals, generated directly from neural activity faster than real time and without a text-decoding step.', u: 'https://arxiv.org/abs/2609.04455',
       img: 'projects/brain2speech.webp', alt: 'Brain2Speech-Net pipeline diagram, from neural recording to generated speech waveform',
       cap: 'From a neural recording to a speech waveform: brain content and frame encoders, a deep-HMM aligner that finds phoneme segments, and a flow-based speech decoder. No text is decoded along the way.' },
-    { t: 'StyleInstructCaps', v: 'AACL 2026', d: 'The first benchmark for controllable speaking-style captioning in audio-language models: a 2.9k-hour corpus, six caption types per utterance and a human-validated LLM judge.', u: 'https://styleinstructcaps.github.io/', lt: 'Visit the website ↗' },
+    { t: 'StyleInstructCaps', v: 'AACL 2026', d: 'The first benchmark for controllable speaking-style captioning in audio-language models: a 2.9k-hour corpus, six caption types per utterance and a human-validated LLM judge.', u: 'https://styleinstructcaps.github.io/', lt: 'Visit the website ↗',
+      img: 'projects/styleinstructcaps.webp', alt: 'StyleInstructCaps benchmark overview with LLM judges and speaker-style consistency analysis',
+      cap: 'How the benchmark evaluates captions: LLM judges for faithfulness to the speech metadata (A), hallucinations (B) and instruction following (C), generalization to unseen datasets and prompts (D), and speaker-style consistency through speaker verification and caption clustering (E).' },
     { t: 'EmotionRankCLAP', v: 'Interspeech 2025', d: 'A contrastive language-audio model that aligns natural-language speaking-style captions with emotional speech using Rank-N-Contrast over valence and arousal, preserving the ordinal structure of emotion.', u: 'https://arxiv.org/abs/2505.23732',
       img: 'projects/emotionrankclap.webp', alt: 'EmotionRankCLAP diagram of speech and caption pairs ranked by valence and arousal',
       cap: '(a) A batch of speech and caption pairs with valence and arousal labels. (b) How Rank-N-Contrast builds the positive and negative pairs across the two modalities.' },
@@ -1043,7 +1054,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   /* ---------- windows ---------- */
   const wins = $$('.win');
   const winById = Object.fromEntries(wins.map(w => [w.dataset.win, w]));
-  const DEFAULTS = { about: [.05, 18], news: [.34, 56], research: [.24, 40], reflections: [.28, 36], figure: [.1, 24], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
+  const DEFAULTS = { about: [.05, 18], news: [.6, 56], research: [.03, 22], reflections: [.28, 36], figure: [.1, 24], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
   const openers = {};
   let zTop = 10;
 
@@ -1655,7 +1666,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   /* ---------- restart, resize, first view ---------- */
   function initialState() {
     if (!narrow()) openWin('research');
-    openWin('about');
+    openWin('news');
   }
   function restart() {
     wins.forEach(w => closeWin(w, true));
