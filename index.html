@@ -1,0 +1,1475 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shreeram Chandra</title>
+<meta name="description" content="Shreeram Chandra: Ph.D. student at UT Dallas and visiting researcher at CLSP, Johns Hopkins, working on expressive and controllable speech synthesis.">
+<meta property="og:title" content="Shreeram Chandra">
+<meta property="og:description" content="Shreeram Chandra: Ph.D. student at UT Dallas and visiting researcher at CLSP, Johns Hopkins, working on expressive and controllable speech synthesis.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); } img { max-width: 100%; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400..700&family=VT323&display=swap">
+<style>
+:root {
+  /* Layout: a 1991 desktop. Menu bar on top, icons down the right edge, overlapping windows you drag, resize and close. */
+  --desk: #7b9bc0;
+  --desk-dot: #6f8fb6;
+  --desk-deep: #4f6d94;
+  --ink: #17171c;
+  --ink-2: #4d4a43;
+  --paper: #fbfaf4;
+  --chrome: #ebe7da;
+  --surround: #c9c5b9;
+  --muted: #8b877c;
+  --rule: #d6d1c1;
+  --lcd: #c3ecd0;
+  --lcd-ink: #17402c;
+  --note: #f6e27f;
+  --link: #2346b0;
+  --sky: #e3f1f6;
+  --soil: #8a5a3b;
+  --water: #4aa3e0;
+  --f-display: "Pixelify Sans", "Chicago", "Charcoal", ui-monospace, monospace;
+  --f-body: "Atkinson Hyperlegible", "Geneva", "Verdana", system-ui, sans-serif;
+  --f-mono: "VT323", "Monaco", ui-monospace, monospace;
+  color-scheme: light;
+}
+[hidden] { display: none !important; }
+html { height: 100%; box-sizing: border-box; }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  height: 100%; margin: 0; display: flex; flex-direction: column; overflow: hidden;
+  background-color: var(--desk);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' fill='%236f8fb6'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%236f8fb6'/%3E%3C/svg%3E");
+  color: var(--ink); font: 15px/1.55 var(--f-body); -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+a { color: var(--link); text-underline-offset: 2px; }
+a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
+:focus-visible { outline: 2px dotted var(--ink); outline-offset: 2px; }
+
+/* ---------- menu bar ---------- */
+.menubar {
+  position: relative; z-index: 1; flex: none; height: 26px;
+  display: flex; align-items: stretch; justify-content: space-between;
+  background: var(--paper); border-bottom: 1px solid var(--ink);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  font: 500 15px/25px var(--f-display); user-select: none; -webkit-user-select: none;
+}
+.menus { display: flex; }
+.menu { position: relative; }
+.menu-title { height: 25px; padding: 0 10px; border: 0; background: none; display: flex; align-items: center; cursor: default; font: inherit; }
+.menu-title.is-open { background: var(--ink); color: var(--paper); }
+.menu-title.is-open svg rect { fill: var(--paper); }
+.menu-title.logo { padding: 0 9px; }
+.menu-title.logo svg { width: 18px; height: 18px; display: block; }
+.menu-drop {
+  position: absolute; top: 25px; left: 0; z-index: 10; min-width: 230px; max-width: calc(100vw - 32px);
+  background: var(--paper); border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); padding: 3px 0;
+}
+.menu-drop button {
+  display: flex; justify-content: space-between; gap: 18px; width: 100%; padding: 0 16px; border: 0; background: none;
+  font: 500 15px/24px var(--f-display); text-align: left; cursor: default; white-space: nowrap;
+}
+.menu-drop button:hover:not(:disabled), .menu-drop button:focus-visible { background: var(--ink); color: var(--paper); outline: none; }
+.menu-drop button:disabled { color: var(--muted); }
+.menu-drop hr { border: 0; border-top: 1px dotted var(--muted); margin: 3px 0; }
+.menubar-right { display: flex; align-items: center; gap: 14px; font-size: 14px; white-space: nowrap; }
+.toast { background: var(--ink); color: var(--paper); padding: 0 8px; line-height: 20px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- desktop ---------- */
+.desktop {
+  position: relative; z-index: 0; flex: 1; min-height: 0; overflow: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+.desktop::before, .desktop::after {
+  content: ""; position: absolute; top: 0; width: 10px; height: 10px; z-index: 99999; pointer-events: none;
+}
+.desktop::before { left: 0; background: radial-gradient(circle at 100% 100%, transparent 9px, var(--ink) 9.5px); }
+.desktop::after { right: 0; background: radial-gradient(circle at 0 100%, transparent 9px, var(--ink) 9.5px); }
+
+.icons {
+  position: absolute; top: 14px; bottom: 116px; right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-auto-flow: column; grid-template-rows: repeat(auto-fill, 94px); grid-auto-columns: 104px;
+  justify-items: center; column-gap: 4px; direction: rtl; pointer-events: none; z-index: 1;
+}
+.icon {
+  direction: ltr; pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  width: 104px; padding: 4px 2px; border: 0; background: none; cursor: default; touch-action: none;
+  -webkit-user-select: none; user-select: none;
+}
+.icon-img { width: 48px; height: 48px; display: block; }
+.icon-img svg, [data-icon] svg { width: 100%; height: 100%; display: block; }
+.icon-label { font: 500 12px/1.25 var(--f-display); background: var(--paper); padding: 1px 4px; max-width: 102px; text-align: center; overflow-wrap: break-word; }
+.icon.is-selected .icon-img { filter: brightness(.45); }
+.icon.is-selected .icon-label { background: var(--ink); color: var(--paper); }
+.icon:focus-visible { outline: none; }
+.icon:focus-visible .icon-label { outline: 2px dotted var(--ink); outline-offset: 2px; }
+.icon.is-free { position: absolute; }
+.icon.trash { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); bottom: 14px; z-index: 1; }
+.icon.trash.is-free { right: auto; bottom: auto; }
+.icon.is-dragging { opacity: .75; }
+
+.sticky {
+  position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 22px; z-index: 2; width: 216px;
+  background: var(--note); border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
+  padding: 0 12px 10px; font-size: 14px; line-height: 1.45; touch-action: none;
+}
+.sticky.is-moved { bottom: auto; }
+.sticky-grip { height: 12px; margin: 0 -12px 8px; border-bottom: 1px dashed var(--ink-2); cursor: grab; }
+.sticky p { margin: 0 0 6px; }
+.sticky p:last-child { margin: 0; }
+.touch-hint, .hint-touch { display: none; }
+
+/* ---------- windows ---------- */
+.win {
+  position: absolute; left: 16px; top: 16px; z-index: 10;
+  display: flex; flex-direction: column; background: var(--paper);
+  border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
+  max-height: calc(100% - 16px); min-width: 260px; min-height: 140px;
+  resize: both; overflow: hidden;
+}
+.win:focus { outline: none; }
+.win-title {
+  position: relative; flex: none; height: 22px; display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid var(--ink); background: var(--chrome); touch-action: none;
+  -webkit-user-select: none; user-select: none; cursor: default;
+}
+.win-title::before {
+  content: ""; position: absolute; inset: 5px 4px;
+  background: repeating-linear-gradient(to bottom, var(--ink) 0 1px, transparent 1px 2px);
+}
+.win-name {
+  position: relative; margin: 0; padding: 0 8px; background: var(--chrome);
+  font: 500 14px/21px var(--f-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: calc(100% - 76px);
+}
+.win-close, .win-zoom {
+  position: absolute; top: 4px; z-index: 1; width: 13px; height: 13px; padding: 0;
+  border: 1px solid var(--ink); background: var(--chrome); box-shadow: 0 0 0 2px var(--chrome); cursor: pointer;
+}
+.win-close { left: 9px; }
+.win-zoom { right: 9px; }
+.win-zoom::after { content: ""; position: absolute; left: 0; top: 0; width: 6px; height: 6px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.win-close:active, .win-zoom:active { background: var(--ink); }
+.win:not(.is-front) .win-title::before { display: none; }
+.win:not(.is-front) .win-name { color: var(--muted); }
+.win:not(.is-front) .win-close, .win:not(.is-front) .win-zoom { border-color: var(--muted); }
+.win:not(.is-front) .win-zoom::after { border-color: var(--muted); }
+.win-info {
+  flex: none; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 3px 12px 2px; border-bottom: 3px double var(--ink); font: 13px/1.5 var(--f-display);
+}
+.win-toolbar { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 8px 12px; border-bottom: 1px solid var(--ink); background: var(--chrome); }
+.win-body { flex: 1; min-height: 0; overflow: auto; padding: 16px 18px 20px; }
+.win-body > :first-child { margin-top: 0; }
+
+#win-about { width: min(520px, calc(100% - 150px)); }
+#win-research { width: min(760px, calc(100% - 150px)); height: min(600px, calc(100% - 64px)); }
+#win-notes { width: min(580px, calc(100% - 150px)); height: min(540px, calc(100% - 80px)); }
+#win-music { width: min(390px, calc(100% - 150px)); }
+#win-garden { width: min(620px, calc(100% - 150px)); }
+#win-beyond { width: min(640px, calc(100% - 150px)); height: min(620px, calc(100% - 64px)); }
+#win-cv { width: min(660px, calc(100% - 150px)); height: min(640px, calc(100% - 48px)); }
+#win-trash { width: min(460px, calc(100% - 150px)); }
+
+/* controls */
+.btn {
+  font: 500 14px/1.1 var(--f-display); padding: 6px 14px; border: 1px solid var(--ink); border-radius: 7px;
+  background: var(--paper); cursor: pointer; white-space: nowrap;
+}
+.btn:active, .btn.is-active { background: var(--ink); color: var(--paper); }
+.btn-default { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink); margin: 0 4px; }
+.btn-small { padding: 3px 10px; font-size: 13px; }
+.seg { display: inline-flex; border: 1px solid var(--ink); border-radius: 7px; overflow: hidden; background: var(--paper); }
+.seg button { font: 500 14px/1 var(--f-display); padding: 5px 14px; border: 0; background: none; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--ink); }
+.seg button[aria-selected="true"] { background: var(--ink); color: var(--paper); }
+.check { display: inline-flex; align-items: center; gap: 6px; font: 13px var(--f-display); cursor: pointer; }
+.check input { width: 14px; height: 14px; margin: 0; accent-color: var(--ink); }
+.small { font-size: 14px; color: var(--ink-2); }
+.draft { font: 13px/1.4 var(--f-display); border: 1px dashed var(--ink-2); padding: 6px 10px; color: var(--ink-2); background: var(--paper); }
+
+/* about */
+.about-head { display: flex; gap: 16px; align-items: center; margin-bottom: 12px; }
+.about-photo { width: 96px; height: 96px; flex: none; object-fit: cover; border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); background: var(--chrome); }
+.about h1 { font: 600 28px/1.1 var(--f-display); margin: 0 0 6px; letter-spacing: .3px; text-wrap: balance; }
+.about-role { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.45; }
+.about p { max-width: 62ch; }
+.sysinfo { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 14px; margin: 14px 0; font-size: 14px; }
+.sysinfo dt { font: 500 13px/1.65 var(--f-display); color: var(--ink-2); }
+.sysinfo dd { margin: 0; }
+.mem { margin: 16px 0; }
+.mem figcaption { display: flex; justify-content: space-between; font: 500 13px/1.6 var(--f-display); }
+.mem-bar { display: flex; height: 16px; border: 1px solid var(--ink); }
+.mem-bar span { border-right: 1px solid var(--ink); }
+.mem-bar span:last-child { border-right: 0; }
+.mem-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; font: 13px var(--f-display); font-variant-numeric: tabular-nums; }
+.mem-legend i { display: inline-block; width: 12px; height: 12px; border: 1px solid var(--ink); vertical-align: -2px; margin-right: 5px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 10px; }
+.chip { font: 500 13px/1 var(--f-display); padding: 5px 9px; border: 1px solid var(--ink); border-radius: 4px; background: var(--chrome); color: var(--ink); text-decoration: none; }
+.email { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 14px; margin: 0; }
+.email span { user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+
+/* research */
+.cards { display: grid; gap: 14px; }
+.card { border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); background: var(--paper); }
+.card-title { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 3px 10px; border-bottom: 1px solid var(--ink); background: var(--chrome); }
+.card-title h3 { font: 600 16px/1.5 var(--f-display); margin: 0; }
+.card-venue { font: 13px var(--f-display); white-space: nowrap; }
+.card p { margin: 10px 12px 6px; max-width: 70ch; }
+.card-link { display: inline-block; margin: 0 12px 12px; font: 500 14px var(--f-display); }
+.card-link.muted { color: var(--muted); }
+.year { margin-bottom: 18px; }
+.year h3 { display: flex; justify-content: space-between; align-items: baseline; font: 600 18px/1.4 var(--f-display); margin: 0 0 4px; border-bottom: 1px solid var(--ink); }
+.year-n { font: 13px var(--f-display); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.pubs { list-style: none; margin: 0; padding: 0; }
+.pub { padding: 8px 0 9px; border-bottom: 1px dotted var(--rule); }
+.pub:last-child { border-bottom: 0; }
+.pub-title { display: block; font-weight: 700; line-height: 1.4; }
+.pub-auth, .pub-venue { display: block; font-size: 14px; color: var(--ink-2); line-height: 1.45; }
+.pub-auth b { color: var(--ink); }
+.pub-venue { font-style: italic; }
+.pub-links { display: flex; gap: 10px; margin-top: 3px; font: 500 13px var(--f-display); }
+
+/* lab notes */
+.notes { font: 21px/1.2 var(--f-mono); background: var(--paper); }
+.mono-h { margin: 0 0 4px; padding-bottom: 4px; border-bottom: 3px double var(--ink); }
+.mono-sec { font: inherit; margin: 18px 0 6px; text-transform: lowercase; }
+.mono-sec::before { content: "## "; color: var(--muted); }
+.mono-list { list-style: none; margin: 0; padding: 0; }
+.mono-list li { padding-left: 1.4em; text-indent: -1.4em; }
+.mono-list li::before { content: "- "; padding-right: .4em; color: var(--muted); }
+.mono-intro { margin: 0 0 10px; color: var(--ink-2); }
+.entry { margin: 0 0 14px; }
+.entry p { margin: 2px 0 0 4.2em; color: var(--ink-2); }
+.tag { display: inline-block; width: 4em; }
+.tag-new { color: #b8341f; }
+.entry-q { display: flex; gap: 14px; align-items: flex-start; }
+.entry-q p { margin-left: 0; }
+.qblock {
+  flex: none; width: 44px; height: 44px; border: 2px solid var(--ink); background: #f2b632;
+  box-shadow: inset -3px -3px 0 #b97a12, inset 3px 3px 0 #fbe08a; font: 700 26px/1 var(--f-display); color: var(--paper);
+  text-shadow: 2px 2px 0 var(--ink); cursor: pointer; padding: 0;
+}
+.qblock.is-bumped { animation: bump .2s steps(3); }
+@keyframes bump { 50% { transform: translateY(-8px); } }
+
+/* music */
+.lcd { background: var(--lcd); color: var(--lcd-ink); border: 1px solid var(--ink); box-shadow: inset 2px 2px 0 rgba(23, 23, 28, .18); padding: 8px 10px 6px; font: 22px/1.05 var(--f-mono); }
+.lcd-row { display: flex; justify-content: space-between; gap: 8px; font-variant-numeric: tabular-nums; }
+.lcd-track { overflow: hidden; white-space: nowrap; margin: 4px 0 6px; font-size: 24px; }
+.lcd-track span { display: inline-block; }
+.lcd.is-playing .lcd-track span { animation: marquee 9s linear infinite; }
+@keyframes marquee { 0%, 15% { transform: translateX(0); } 85%, 100% { transform: translateX(min(0px, calc(-100% + 300px))); } }
+#spectrum { display: block; width: 100%; height: 42px; image-rendering: pixelated; }
+.transport { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 14px 0 12px; }
+.playlist { list-style: none; margin: 0 0 12px; padding: 0; border: 1px solid var(--ink); }
+.playlist li + li { border-top: 1px dotted var(--rule); }
+.playlist button { display: flex; justify-content: space-between; gap: 10px; width: 100%; padding: 6px 10px; border: 0; background: none; text-align: left; cursor: pointer; font-size: 14px; }
+.playlist button[aria-current="true"] { background: var(--ink); color: var(--paper); }
+.playlist .dur { font: 13px var(--f-display); font-variant-numeric: tabular-nums; }
+
+/* garden */
+.garden-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 12px 0; }
+.plot { position: relative; display: flex; flex-direction: column; align-items: stretch; padding: 0; border: 1px solid var(--ink); background: var(--paper); cursor: pointer; overflow: hidden; text-align: center; }
+.plot-sky { display: block; background: var(--sky); padding: 10px 0 0; }
+.plot-sky svg { display: block; width: 60px; height: 70px; margin: 0 auto; }
+.plot-soil { display: block; height: 14px; background: var(--soil); border-bottom: 1px solid var(--ink); }
+.plot-name { display: block; font: 600 14px/1.3 var(--f-display); padding: 6px 4px 0; }
+.plot-stage { display: block; font: 13px/1.3 var(--f-display); color: var(--ink-2); padding: 0 4px 8px; }
+.drops i { position: absolute; top: 4px; width: 3px; height: 6px; background: var(--water); animation: drop .45s linear forwards; }
+.drops i:nth-child(1) { left: 34%; }
+.drops i:nth-child(2) { left: 48%; animation-delay: .08s; }
+.drops i:nth-child(3) { left: 60%; animation-delay: .04s; }
+.drops i:nth-child(4) { left: 42%; animation-delay: .14s; }
+@keyframes drop { from { transform: translateY(0); opacity: 1; } to { transform: translateY(70px); opacity: 0; } }
+.garden-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+#garden-status { margin: 0; font-size: 14px; color: var(--ink-2); min-height: 1.5em; }
+
+/* beyond work */
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tile { border: 1px solid var(--ink); padding: 10px 12px 12px; background: var(--paper); }
+.tile h3 { font: 600 16px/1.4 var(--f-display); margin: 0 0 4px; }
+.tile p { margin: 0 0 8px; font-size: 14px; }
+.tile-links { display: flex; flex-wrap: wrap; gap: 4px 12px; font: 500 13px var(--f-display); }
+.nets { margin-top: 16px; border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.nets-head { display: flex; justify-content: space-between; padding: 3px 10px; border-bottom: 1px solid var(--ink); background: var(--chrome); font: 600 14px/1.5 var(--f-display); }
+.nets-head span { font-weight: 400; color: var(--ink-2); }
+.nets-stage { position: relative; }
+#nets { display: block; width: 100%; max-width: 100%; aspect-ratio: 200 / 84; image-rendering: pixelated; cursor: pointer; touch-action: manipulation; }
+.nets-msg { position: absolute; top: 6%; left: 0; right: 0; margin: 0; text-align: center; font: 700 clamp(18px, 4vw, 28px)/1.1 var(--f-display); color: var(--ink); text-shadow: 2px 2px 0 var(--paper); pointer-events: none; }
+.nets-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 10px; border-top: 1px solid var(--ink); font: 14px var(--f-display); font-variant-numeric: tabular-nums; }
+.nets-bar > span:last-child { display: flex; gap: 8px; }
+
+/* cv */
+.cv-body { background: var(--surround); padding: 18px; }
+.page { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid var(--ink); box-shadow: 3px 3px 0 rgba(23, 23, 28, .35); padding: 22px 26px 26px; }
+.page h2 { font: 600 22px/1.2 var(--f-display); margin: 0; }
+.page-sub { margin: 2px 0 0; font-size: 14px; color: var(--ink-2); }
+.page h3 { font: 600 14px/1.4 var(--f-display); letter-spacing: 1.5px; text-transform: uppercase; border-bottom: 1px solid var(--ink); margin: 20px 0 10px; }
+.job { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; margin-bottom: 12px; }
+.job-org { font-weight: 700; }
+.job-date { font: 13px/1.6 var(--f-display); color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.job-role { grid-column: 1 / -1; font-style: italic; font-size: 14px; }
+.job ul { grid-column: 1 / -1; margin: 3px 0 0; padding-left: 18px; font-size: 14px; }
+.page-foot { margin: 20px 0 0; }
+
+/* trash */
+.table-wrap { overflow-x: auto; }
+.list { width: 100%; border-collapse: collapse; font-size: 14px; }
+.list th { font: 500 13px var(--f-display); text-align: left; border-bottom: 1px solid var(--ink); padding: 4px; }
+.list td { padding: 7px 4px; border-bottom: 1px dotted var(--rule); vertical-align: top; }
+.list td:first-child { white-space: nowrap; font-weight: 700; }
+
+/* alert, zoom, boot */
+.alert {
+  position: absolute; left: 50%; top: 22%; transform: translateX(-50%); z-index: 5000; width: min(400px, calc(100% - 32px));
+  display: flex; gap: 14px; padding: 18px; background: var(--paper);
+  border: 1px solid var(--ink); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--ink), 6px 6px 0 4px var(--ink);
+}
+.alert-icon { flex: none; width: 36px; height: 36px; border: 2px solid var(--ink); border-radius: 50%; display: grid; place-items: center; font: 700 22px var(--f-display); }
+.alert p { margin: 0 0 14px; }
+.alert-actions { display: flex; justify-content: flex-end; }
+.zoom-layer { position: fixed; inset: 0; z-index: 9999; pointer-events: none; }
+.zoom-box { position: absolute; border: 1px dashed var(--ink); }
+.boot { position: fixed; inset: 0; z-index: 100000; display: grid; place-items: center; background: var(--desk-deep); }
+.boot-mac { width: 96px; height: 96px; display: block; margin: 0 auto 18px; }
+.boot-dialog { opacity: 0; background: var(--paper); border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); padding: 14px 22px; font: 500 18px var(--f-display); text-align: center; }
+.boot-bar { margin-top: 10px; width: 220px; height: 12px; border: 1px solid var(--ink); }
+.boot-bar span { display: block; width: 0; height: 100%; background: var(--ink); }
+.boot.is-booting .boot-dialog { animation: appear 0s .7s forwards; }
+.boot.is-booting .boot-bar span { animation: fill 1.3s .8s steps(12) forwards; }
+@keyframes appear { to { opacity: 1; } }
+@keyframes fill { to { width: 100%; } }
+
+/* phone */
+@media (max-width: 700px) {
+  .menu.wide-only { display: none; }
+  .menubar-right #front-app { display: none; }
+  .icons { position: static; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-flow: row; grid-template-rows: none; grid-auto-columns: auto; direction: ltr; gap: 8px 0; padding-top: 14px; pointer-events: auto; }
+  .icon { width: 100%; touch-action: manipulation; }
+  .icon-label { max-width: 100%; }
+  .sticky { position: relative; left: auto; bottom: auto; width: auto; margin-top: 18px; touch-action: auto; }
+  .sticky-grip { cursor: default; }
+  .desk-hint { display: none; }
+  .touch-hint, .hint-touch { display: block; }
+  .win {
+    left: calc(8px + env(safe-area-inset-left, 0px)) !important; right: calc(8px + env(safe-area-inset-right, 0px));
+    top: 8px !important; width: auto !important; height: auto !important; resize: none;
+  }
+  .win-zoom { display: none; }
+  .tiles { grid-template-columns: minmax(0, 1fr); }
+  .garden-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .job { grid-template-columns: minmax(0, 1fr); }
+  .page { padding: 16px; }
+  .cv-body { padding: 10px; }
+  .notes { font-size: 20px; }
+  .entry p { margin-left: 0; }
+}
+@media (pointer: coarse) {
+  .desk-hint { display: none; }
+  .touch-hint { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<nav class="menubar" aria-label="Menu bar">
+  <div class="menus">
+    <div class="menu">
+      <button class="menu-title logo" aria-haspopup="true" aria-expanded="false"><span data-icon="wave"></span><span class="sr">Shreeram OS menu</span></button>
+      <div class="menu-drop" role="menu" hidden>
+        <button role="menuitem" data-action="open:about">About Shreeram…</button>
+        <hr>
+        <button role="menuitem" data-action="open:research">Research.app</button>
+        <button role="menuitem" data-action="open:notes">Lab Notes.txt</button>
+        <button role="menuitem" data-action="open:music">Currently Listening.mp3</button>
+        <button role="menuitem" data-action="open:garden">Garden.app</button>
+        <button role="menuitem" data-action="open:beyond">Beyond Work.exe</button>
+        <button role="menuitem" data-action="open:cv">CV.pdf</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-title" aria-haspopup="true" aria-expanded="false">File</button>
+      <div class="menu-drop" role="menu" hidden>
+        <button role="menuitem" data-action="open:cv">Open CV.pdf</button>
+        <button role="menuitem" data-action="close-front">Close Window</button>
+        <button role="menuitem" data-action="close-all">Close All</button>
+        <hr>
+        <button role="menuitem" disabled>Get Info</button>
+      </div>
+    </div>
+    <div class="menu wide-only">
+      <button class="menu-title" aria-haspopup="true" aria-expanded="false">Edit</button>
+      <div class="menu-drop" role="menu" hidden>
+        <button role="menuitem" disabled>Undo</button>
+        <hr>
+        <button role="menuitem" data-action="copy-email">Copy Email Address</button>
+        <button role="menuitem" disabled>Paste</button>
+      </div>
+    </div>
+    <div class="menu wide-only">
+      <button class="menu-title" aria-haspopup="true" aria-expanded="false">View</button>
+      <div class="menu-drop" role="menu" hidden>
+        <button role="menuitem" disabled>✓ by Icon</button>
+        <button role="menuitem" data-action="clean-up">Clean Up Desktop</button>
+      </div>
+    </div>
+    <div class="menu">
+      <button class="menu-title" aria-haspopup="true" aria-expanded="false">Special</button>
+      <div class="menu-drop" role="menu" hidden>
+        <button role="menuitem" data-action="clean-up">Clean Up Desktop</button>
+        <button role="menuitem" data-action="empty-trash">Empty Trash…</button>
+        <hr>
+        <button role="menuitem" data-action="restart">Restart</button>
+      </div>
+    </div>
+  </div>
+  <div class="menubar-right">
+    <span class="toast" id="toast" role="status" hidden></span>
+    <span id="front-app">Finder</span>
+    <time id="clock"></time>
+  </div>
+</nav>
+
+<main class="desktop" id="desk">
+  <div class="icons" id="icons">
+    <button class="icon" data-open="about"><span class="icon-img" data-icon="about"></span><span class="icon-label">About Me</span></button>
+    <button class="icon" data-open="research"><span class="icon-img" data-icon="research"></span><span class="icon-label">Research<wbr>.app</span></button>
+    <button class="icon" data-open="notes"><span class="icon-img" data-icon="notes"></span><span class="icon-label">Lab Notes<wbr>.txt</span></button>
+    <button class="icon" data-open="music"><span class="icon-img" data-icon="music"></span><span class="icon-label">Currently Listening<wbr>.mp3</span></button>
+    <button class="icon" data-open="garden"><span class="icon-img" data-icon="garden"></span><span class="icon-label">Garden<wbr>.app</span></button>
+    <button class="icon" data-open="beyond"><span class="icon-img" data-icon="bat"></span><span class="icon-label">Beyond Work<wbr>.exe</span></button>
+    <button class="icon" data-open="cv"><span class="icon-img" data-icon="cv"></span><span class="icon-label">CV.pdf</span></button>
+  </div>
+  <button class="icon trash" data-open="trash"><span class="icon-img" data-icon="trash"></span><span class="icon-label">Trash</span></button>
+
+  <aside class="sticky" id="sticky">
+    <div class="sticky-grip" aria-hidden="true"></div>
+    <p><b>Hi, I'm Shreeram.</b> I work on expressive speech synthesis.</p>
+    <p class="desk-hint">Double-click an icon to open it. Drag windows by their striped title bars.</p>
+    <p class="touch-hint">Tap an icon to open it.</p>
+  </aside>
+
+  <!-- About -->
+  <section class="win" id="win-about" data-win="about" data-app="About" role="dialog" aria-labelledby="t-about" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-about">About Shreeram</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-body about">
+      <div class="about-head">
+        <img class="about-photo" src="photo.jpg" alt="Shreeram Chandra" width="96" height="96">
+        <div>
+          <h1>Shreeram Chandra</h1>
+          <p class="about-role">Ph.D. student, Computer Engineering, UT Dallas<br>Visiting researcher, CLSP, Johns Hopkins University</p>
+        </div>
+      </div>
+      <p>I am a fourth-year Ph.D. student at UT Dallas, advised by Prof. Berrak Sisman, and currently a visiting researcher at the Center for Language and Speech Processing (CLSP) at Johns Hopkins University. My research builds generative deep learning models that improve speaker and emotion controllability in expressive speech synthesis. I'm broadly interested in multimodal speech and language problems.</p>
+      <dl class="sysinfo">
+        <dt>Version</dt><dd>Ph.D., year 4</dd>
+        <dt>Advisor</dt><dd>Prof. Berrak Sisman</dd>
+        <dt>Location</dt><dd>CLSP, Johns Hopkins, Baltimore</dd>
+        <dt>Latest</dt><dd>Brain2Speech-Net (arXiv 2026)</dd>
+      </dl>
+      <figure class="mem">
+        <figcaption><span>Built-in memory</span><span id="mem-total"></span></figcaption>
+        <div class="mem-bar" id="mem-bar"></div>
+        <div class="mem-legend" id="mem-legend"></div>
+      </figure>
+      <div class="chips">
+        <a class="chip" href="https://scholar.google.com/citations?user=ocSWiUYAAAAJ&amp;hl=en&amp;oi=sra" target="_blank" rel="noopener">Google Scholar ↗</a>
+        <a class="chip" href="https://github.com/Kodhandarama?tab=repositories" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="chip" href="https://www.linkedin.com/in/shreeram-chandra/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a class="chip" href="https://twitter.com/cricketrasika" target="_blank" rel="noopener">X ↗</a>
+        <a class="chip" href="https://www.instagram.com/_kodhandarama_/" target="_blank" rel="noopener">Instagram ↗</a>
+        <a class="chip" href="https://drive.google.com/file/d/1Qi8mfPiA0OhapTXiwKWckOHk8TOT19PJ/view?usp=sharing" target="_blank" rel="noopener">CV ↗</a>
+      </div>
+      <p class="email">Email <span id="email-text">shreeramsureshchandra@gmail.com</span><button class="btn btn-small" data-action="copy-email">Copy</button></p>
+      <p class="hint-touch small">Close this window to see the desktop.</p>
+    </div>
+  </section>
+
+  <!-- Research -->
+  <section class="win" id="win-research" data-win="research" data-app="Research" role="dialog" aria-labelledby="t-research" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-research">Research.app</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-toolbar">
+      <div class="seg" role="tablist" aria-label="Research views">
+        <button role="tab" id="tab-projects" aria-controls="panel-projects" aria-selected="true">Projects</button>
+        <button role="tab" id="tab-pubs" aria-controls="panel-pubs" aria-selected="false">Publications</button>
+      </div>
+      <label class="check" id="first-wrap" hidden><input type="checkbox" id="first-only"> First author only</label>
+    </div>
+    <div class="win-info"><span id="research-count"></span><a href="https://scholar.google.com/citations?user=ocSWiUYAAAAJ&amp;hl=en&amp;oi=sra" target="_blank" rel="noopener">Google Scholar ↗</a></div>
+    <div class="win-body">
+      <div id="panel-projects" role="tabpanel" aria-labelledby="tab-projects"><div class="cards" id="cards"></div></div>
+      <div id="panel-pubs" role="tabpanel" aria-labelledby="tab-pubs" hidden><div id="pub-list"></div></div>
+    </div>
+  </section>
+
+  <!-- Lab notes -->
+  <section class="win" id="win-notes" data-win="notes" data-app="Lab Notes" role="dialog" aria-labelledby="t-notes" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-notes">Lab Notes.txt</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-body notes">
+      <p class="mono-h">LAB NOTES.txt</p>
+      <h3 class="mono-sec">ideas i'm exploring</h3>
+      <ul class="mono-list">
+        <li>expressive and controllable speech synthesis</li>
+        <li>controlling emotion, style and speaker identity with natural language and weak supervision</li>
+        <li>linking speech, language and affect with contrastive and retrieval-based learning</li>
+        <li>evaluating controllable and instruction-guided speech synthesis</li>
+        <li>robust speech generation with limited or imperfect data</li>
+        <li>low-latency, intelligible brain-to-speech synthesis for assistive communication</li>
+      </ul>
+      <h3 class="mono-sec">reflections</h3>
+      <p class="mono-intro">A growing series of essays and notes on research, the PhD, and everything in between.</p>
+      <article class="entry">
+        <span class="tag tag-new">[NEW]</span><a href="https://docs.google.com/document/d/1RBWPOsZLMTVw3zgUc5bhXz6_UyOk_1DWbEAc0tzxUcQ/edit?usp=sharing" target="_blank" rel="noopener">What does it take to be happy, huh?</a>
+        <p>A haircut in Hampden, a barber who used to teach science, and why happiness might be a choice rather than a reward.</p>
+      </article>
+      <article class="entry">
+        <span class="tag">[...]</span><b>Next level loading...</b>
+        <p>The next reflection is being written. Check back soon.</p>
+      </article>
+      <article class="entry entry-q">
+        <button class="qblock" id="qblock" aria-label="Hit the question block">?</button>
+        <div><b>? Block</b><p id="qblock-msg" aria-live="polite">Something is hiding in this block. Hit it again later.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Currently listening -->
+  <section class="win" id="win-music" data-win="music" data-app="Listening" role="dialog" aria-labelledby="t-music" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-music">Currently Listening.mp3</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-body">
+      <div class="lcd" id="lcd">
+        <div class="lcd-row"><span>NOW PLAYING</span><span id="lcd-time">0:00 / 0:00</span></div>
+        <div class="lcd-track"><span id="lcd-title"></span></div>
+        <canvas id="spectrum" width="48" height="14" aria-hidden="true"></canvas>
+      </div>
+      <div class="transport">
+        <button class="btn" id="prev" aria-label="Previous track">◀◀</button>
+        <button class="btn btn-default" id="play" aria-label="Play">▶ Play</button>
+        <button class="btn" id="next" aria-label="Next track">▶▶</button>
+      </div>
+      <ol class="playlist" id="playlist"></ol>
+      <p class="small">I play the Carnatic flute. These two phrases are synthesized live in your browser with a few lines of Web Audio. There are no recordings.</p>
+      <p class="draft">Draft: your current playlist goes here.</p>
+    </div>
+  </section>
+
+  <!-- Garden -->
+  <section class="win" id="win-garden" data-win="garden" data-app="Garden" role="dialog" aria-labelledby="t-garden" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-garden">Garden.app</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-info"><span id="garden-day">Day 1</span><span>Click a plot to water it</span></div>
+    <div class="win-body">
+      <p class="draft">Draft: example plants for now.</p>
+      <div class="garden-grid" id="garden-grid"></div>
+      <div class="garden-foot">
+        <p id="garden-status" aria-live="polite"></p>
+        <button class="btn btn-small" id="garden-reset">Start over</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Beyond work -->
+  <section class="win" id="win-beyond" data-win="beyond" data-app="Beyond Work" role="dialog" aria-labelledby="t-beyond" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-beyond">Beyond Work.exe</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-body">
+      <div class="tiles">
+        <section class="tile">
+          <h3>Cricket</h3>
+          <p>I play competitive cricket at a semi-pro level, and I keep a cricket blog filled with unusual takes.</p>
+          <p class="tile-links"><a href="https://ramatalkscricket.wordpress.com/" target="_blank" rel="noopener">ramatalkscricket ↗</a><a href="https://twitter.com/cricketrasika" target="_blank" rel="noopener">@cricketrasika ↗</a></p>
+        </section>
+        <section class="tile">
+          <h3>Carnatic flute</h3>
+          <p>I play the Carnatic flute.</p>
+          <button class="btn btn-small" data-action="open:music">Hear two phrases</button>
+        </section>
+        <section class="tile">
+          <h3>Photography</h3>
+          <p>I love taking photos, especially when I'm out hiking.</p>
+          <p class="tile-links"><a href="https://www.instagram.com/_kodhandarama_/" target="_blank" rel="noopener">Instagram ↗</a></p>
+        </section>
+        <section class="tile">
+          <h3>Writing</h3>
+          <p>Sometimes I pick up a pen or a keyboard and write the occasional essay.</p>
+          <button class="btn btn-small" data-action="open:notes">Read Lab Notes</button>
+        </section>
+      </div>
+      <section class="nets" aria-labelledby="nets-title">
+        <header class="nets-head"><span id="nets-title" style="color:inherit;font-weight:600">NETS.EXE</span><span>time your shot</span></header>
+        <div class="nets-stage">
+          <canvas id="nets" width="200" height="84" tabindex="0" aria-label="Cricket nets. Click, tap or press Space to swing."></canvas>
+          <p class="nets-msg" id="nets-msg" aria-live="polite">Press Bowl to face an over</p>
+        </div>
+        <div class="nets-bar">
+          <span id="nets-score">Runs 0 · Balls 0/6 · Wickets 0</span>
+          <span><button class="btn btn-small" id="nets-swing">Swing</button><button class="btn btn-small btn-default" id="nets-start">Bowl</button></span>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- CV -->
+  <section class="win" id="win-cv" data-win="cv" data-app="CV" role="dialog" aria-labelledby="t-cv" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-cv">CV.pdf</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-body cv-body">
+      <article class="page">
+        <h2>Shreeram Chandra</h2>
+        <p class="page-sub">Expressive speech synthesis · speech and language · brain-to-speech</p>
+        <h3>Education</h3>
+        <div class="job"><span class="job-org">The University of Texas at Dallas</span><span class="job-date">Aug 2022 – May 2027</span><span class="job-role">Ph.D., Computer Engineering · GPA 3.94/4.0</span></div>
+        <div class="job"><span class="job-org">Johns Hopkins University, CLSP</span><span class="job-date">Jan 2025 – May 2027</span><span class="job-role">Visiting researcher (the research group moved to Hopkins!)</span></div>
+        <div class="job"><span class="job-org">PES University, Bengaluru</span><span class="job-date">Jul 2017 – May 2021</span><span class="job-role">B.Tech., Electronics and Communication Engineering · CGPA 8.42/10</span></div>
+        <h3>Experience</h3>
+        <div class="job"><span class="job-org">Center for Language and Speech Processing, Johns Hopkins</span><span class="job-date">Jan 2025 – present</span><span class="job-role">Visiting Researcher</span></div>
+        <div class="job"><span class="job-org">Apple</span><span class="job-date">May – Aug 2026</span><span class="job-role">Machine Learning Research Intern</span>
+          <ul><li>Worked on making Apple Foundation Models better.</li><li>Post-training of audio-language models (ALMs), with a focus on data mixture selection.</li></ul></div>
+        <div class="job"><span class="job-org">Otter.ai</span><span class="job-date">Jun – Aug 2025</span><span class="job-role">Research Intern</span>
+          <ul><li>Built a speaking-style captioning model and a TTS evaluation framework.</li><li>Worked on StyleInstructCaps, a speaking-style captioning benchmark (AACL 2026).</li></ul></div>
+        <div class="job"><span class="job-org">Intel</span><span class="job-date">Jul 2021 – Jul 2022</span><span class="job-role">Graphics Hardware Engineer</span>
+          <ul><li>Built a software model simulator mimicking GPU hardware behavior for pre-silicon validation.</li><li>Worked on the display pixel-processing pipeline and its image filters.</li></ul></div>
+        <div class="job"><span class="job-org">Indian Institute of Science, Speech and Audio Group</span><span class="job-date">Jan – Jul 2021</span><span class="job-role">Research Intern</span>
+          <ul><li>Designed DSP-based listening experiments to study the perceived source width of audio signals.</li><li>Synthesized vowels with LPC source-filter models and built loudspeaker compensation filters.</li></ul></div>
+        <div class="job"><span class="job-org">Intel</span><span class="job-date">May – Nov 2020</span><span class="job-role">Undergraduate Intern</span>
+          <ul><li>Built a test application interfacing components of the display GPU architecture.</li><li>Wrote a C++ parser to reproduce customer-reported bugs on test benches.</li></ul></div>
+        <div class="job"><span class="job-org">Microsoft Innovation Lab, PES University</span><span class="job-date">May – Aug 2019</span><span class="job-role">Research Project Intern</span>
+          <ul><li>Worked on Mythodex, a context-based mythological scene mapping model.</li><li>Used neural networks, graphs and object detectors (YOLO, SSD, Faster R-CNN).</li></ul></div>
+        <p class="page-foot"><a class="btn btn-default" style="display:inline-block;text-decoration:none;color:var(--ink)" href="https://drive.google.com/file/d/1Qi8mfPiA0OhapTXiwKWckOHk8TOT19PJ/view?usp=sharing" target="_blank" rel="noopener">Open the full CV ↗</a></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Trash -->
+  <section class="win" id="win-trash" data-win="trash" data-app="Trash" role="dialog" aria-labelledby="t-trash" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-trash">Trash</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-info"><span>2 items</span><span>nothing here is really trash</span></div>
+    <div class="win-body">
+      <div class="table-wrap">
+        <table class="list">
+          <thead><tr><th>Name</th><th>Kind</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td>old-website.canva</td><td>Canva site</td><td>The previous version of this site. Eight pages and some very nice pixel clouds.</td></tr>
+            <tr><td>cognitive-radio/</td><td>Folder</td><td>Undergrad research on spectrum sensing, 2021. Archived, not deleted. The papers are in Research.app.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="alert" id="alert" role="alertdialog" aria-labelledby="alert-text" hidden>
+    <span class="alert-icon" aria-hidden="true">!</span>
+    <div>
+      <p id="alert-text">The Trash stays full. The old website had really nice clouds.</p>
+      <div class="alert-actions"><button class="btn btn-default" id="alert-ok">OK</button></div>
+    </div>
+  </div>
+</main>
+
+<div class="boot" id="boot" hidden>
+  <div>
+    <span class="boot-mac" data-icon="about"></span>
+    <div class="boot-dialog">Welcome to Shreeram OS<div class="boot-bar"><span></span></div></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const desk = $('#desk');
+  const iconsBox = $('#icons');
+  const frontApp = $('#front-app');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const narrowMQ = matchMedia('(max-width: 700px)');
+  const narrow = () => narrowMQ.matches;
+  const EMAIL = 'shreeramsureshchandra@gmail.com';
+
+  /* ---------- pixel icons: 16x16 maps, one character per pixel ---------- */
+  const PAL = { k: '#17171c', w: '#ffffff', c: '#eadfc4', g: '#a9a39a', G: '#5f5a55', m: '#a6efc8', b: '#2f5fd0', y: '#f6e27f', r: '#d1462f', n: '#c0673d', N: '#7a4a2a', e: '#58a84f', E: '#2f6b32' };
+  const ICONS = {
+    about: [
+      '................', '..kkkkkkkkkkkk..', '..kcccccccccck..', '..kckkkkkkkkck..',
+      '..kckmmmmmmkck..', '..kckmkmmkmkck..', '..kckmmmmmmkck..', '..kckmkmmkmkck..',
+      '..kckmmkkmmkck..', '..kckkkkkkkkck..', '..kcccccccccck..', '..kcgggcccccck..',
+      '..kcccccccccck..', '..kkkkkkkkkkkk..', '.kwgwgwgwgwgwgk.', '.kkkkkkkkkkkkkk.'
+    ],
+    research: [
+      '................', '..kkkkkkkkk.....', '..kwwwwwwwkk....', '..kwgggggwkwk...',
+      '..kwwwwwwwkwwk..', '..kwwwwwwwkkkk..', '..kwwwwbwwwwwk..', '..kwwbwbbwbwwk..',
+      '..kwbbbbbbbbwk..', '..kbbbbbbbbbbk..', '..kwbbbbbbbbwk..', '..kwwbwbbwbwwk..',
+      '..kwwwwbwwwwwk..', '..kwwwwwwwwwwk..', '..kkkkkkkkkkkk..', '................'
+    ],
+    notes: [
+      '................', '..kkkkkkkkkkkk..', '..krrrrrrrrrrk..', '..kkkkkkkkkkkk..',
+      '..kyyyyyyyyyyk..', '..kyGGGGGGGyyk..', '..kyyyyyyyyyyk..', '..kyGGGGGGGGyk..',
+      '..kyyyyyyyyyyk..', '..kyGGGGGyyyyk..', '..kyyyyyyyyyyk..', '..kyGGGGGGGyyk..',
+      '..kyyyyyyyyyyk..', '..kyyyyyyyyyyk..', '..kkkkkkkkkkkk..', '................'
+    ],
+    music: [
+      '................', '......kkkkkkkk..', '......kkkkkkkk..', '......k......k..',
+      '......k......k..', '......k......k..', '......k......k..', '......k......k..',
+      '......k......k..', '......k......k..', '...kkkk...kkkk..', '..kkkkk..kkkkk..',
+      '..kkkkk..kkkkk..', '...kkk....kkk...', '................', '................'
+    ],
+    garden: [
+      '................', '................', '..eee......eee..', '.eeeee....eeeee.',
+      '.eeeeee..eeeeee.', '..eeeeeeeeeeee..', '...eeeeEEeeee...', '.......EE.......',
+      '.......EE.......', '...kkkkkkkkkk...', '...knnnnnnnnk...', '....knnnnnnk....',
+      '....knnnnnnk....', '....knnnnnnk....', '.....kkkkkk.....', '................'
+    ],
+    bat: [
+      '..............k.', '.............kGk', '............kGk.', '...........kGk..',
+      '..........kcck..', '.........kccck..', '........kccck...', '.......kccck....',
+      '......kccck.....', '.....kccck......', '....kccck...kk..', '...kccck...krrk.',
+      '..kccck....krrk.', '..kcck......kk..', '..kkk...........', '................'
+    ],
+    cv: [
+      '................', '..kkkkkkkkk.....', '..kwwwwwwwkk....', '..kwwwwwwwkwk...',
+      '..kwwwwwwwkwwk..', '..kwwwwwwwkkkk..', '..kwrrrrrrrrwk..', '..kwrrrrrrrrwk..',
+      '..kwwwwwwwwwwk..', '..kwGGGGGGGGwk..', '..kwwwwwwwwwwk..', '..kwGGGGGGwwwk..',
+      '..kwwwwwwwwwwk..', '..kwGGGGGGGwwk..', '..kkkkkkkkkkkk..', '................'
+    ],
+    trash: [
+      '................', '......kkkk......', '..kkkkkkkkkkkk..', '..kggggggggggk..',
+      '..kkkkkkkkkkkk..', '...kwwGwwGwwk...', '...kwwGwwGwwk...', '...kwwGwwGwwk...',
+      '...kwwGwwGwwk...', '...kwwGwwGwwk...', '...kwwGwwGwwk...', '...kwwGwwGwwk...',
+      '...kwwGwwGwwk...', '...kkkkkkkkkk...', '................', '................'
+    ]
+  };
+  ICONS.wave = (() => {
+    const rows = Array.from({ length: 16 }, () => Array(16).fill('.'));
+    [[1, 6], [4, 12], [7, 16], [10, 8], [13, 12]].forEach(([x, h]) => {
+      for (let y = 8 - h / 2; y < 8 + h / 2; y++) { rows[y][x] = 'k'; rows[y][x + 1] = 'k'; }
+    });
+    return rows.map(r => r.join(''));
+  })();
+
+  // Growth stages for Garden.app: 12x14 maps, 'f' is each plant's flower colour.
+  const PLANT_STAGES = [
+    ['............', '............', '............', '............', '............', '............', '............',
+     '............', '............', '............', '............', '............', '.....NN.....', '...NNNNNN...'],
+    ['............', '............', '............', '............', '............', '............', '............',
+     '............', '...ee..ee...', '....eeee....', '.....EE.....', '.....EE.....', '.....EE.....', '...NNNNNN...'],
+    ['............', '............', '............', '.....ee.....', '..ee.EE.ee..', '.eeeeEEeeee.', '..eeeEEeee..',
+     '.ee..EE..ee.', '.eeeeEEeeee.', '..eeeEEeee..', '.....EE.....', '.....EE.....', '.....EE.....', '...NNNNNN...'],
+    ['.....ff.....', '....fyyf....', '.....ff.....', '.....EE.....', '..ee.EE.ee..', '.eeeeEEeeee.', '..eeeEEeee..',
+     '.ee..EE..ee.', '.eeeeEEeeee.', '..eeeEEeee..', '.....EE.....', '.....EE.....', '.....EE.....', '...NNNNNN...']
+  ];
+
+  function pixelSVG(rows, pal = PAL) {
+    const w = Math.max(...rows.map(r => r.length)), h = rows.length;
+    let rects = '';
+    rows.forEach((row, y) => {
+      let x = 0;
+      while (x < w) {
+        const ch = row[x] || '.';
+        if (!pal[ch]) { x++; continue; }
+        let x2 = x + 1;
+        while (x2 < w && row[x2] === ch) x2++;
+        rects += `<rect x="${x}" y="${y}" width="${x2 - x}" height="1" fill="${pal[ch]}"/>`;
+        x = x2;
+      }
+    });
+    return `<svg viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${rects}</svg>`;
+  }
+  $$('[data-icon]').forEach(el => { const m = ICONS[el.dataset.icon]; if (m) el.innerHTML = pixelSVG(m); });
+
+  /* ---------- content ---------- */
+  const PROJECTS = [
+    { t: 'Brain2Speech-Net', v: 'arXiv 2026', d: 'Intelligible brain-to-speech synthesis from intracortical neural signals, generated directly from neural activity faster than real time and without a text-decoding step.', u: 'https://arxiv.org/abs/2609.04455' },
+    { t: 'StyleInstructCaps', v: 'AACL 2026', d: 'The first benchmark for controllable speaking-style captioning in audio-language models: a 2.9k-hour corpus, six caption types per utterance and a human-validated LLM judge.', u: null },
+    { t: 'EmotionRankCLAP', v: 'Interspeech 2025', d: 'A contrastive language-audio model that aligns natural-language speaking-style captions with emotional speech using Rank-N-Contrast over valence and arousal, preserving the ordinal structure of emotion.', u: 'https://arxiv.org/abs/2505.23732' },
+    { t: 'SelectTTS', v: 'arXiv 2024', d: 'Low-complexity text-to-speech for unseen speakers. Instead of training a speaker model, it selects frames from the target speaker’s own speech using discrete speech units.', u: 'https://arxiv.org/abs/2408.17432' },
+    { t: 'TEmoTTS', v: 'Odyssey 2024', d: 'Emotional TTS without emotion labels. A language model maps the spoken text to a point in an unsupervised style-token space, so the words themselves drive expressive prosody.', u: 'https://arxiv.org/abs/2405.11413' }
+  ];
+  const ax = id => [['Paper', 'https://arxiv.org/abs/' + id]];
+  const PUBS = [
+    { y: 2026, t: 'Differential Attention Unlocks Complementary EEG and Speech Fusion for Emotion Recognition', a: 'Lee, P. H., Chandra, S. S., & Hansen, J. H. L.', v: 'arXiv:2609.31399', l: ax('2609.31399') },
+    { y: 2026, t: 'AFA-Net: A Differential Attention Approach for Auditory Attention Detection', a: 'Lee, P. H., Chandra, S. S., Thakkar, K., & Hansen, J. H. L.', v: 'arXiv:2609.31402', l: ax('2609.31402') },
+    { y: 2026, t: 'Robust Cross-Domain Speech-Based Alzheimer’s Disease Detection via Iterative Adversarial Self-Training', a: 'Sun, L., Chandra, S. S., Mahapatra, A., Provost, E. M., MacWhinney, B., & Sisman, B.', v: 'arXiv:2609.14139', l: ax('2609.14139') },
+    { y: 2026, t: 'Brain2Speech-Net: Intelligible, Real-Time Brain-to-Speech Synthesis Without Text Decoding', a: 'Chandra, S. S., Cai, Z., Tsao, Y., King, S., & Sisman, B.', v: 'arXiv:2609.04455', l: ax('2609.04455'), first: true },
+    { y: 2026, t: 'Cleaner Speech, Weaker Generalization: Revisiting Pitt-Derived Benchmarks for Alzheimer’s Disease Detection', a: 'Sun, L., Chandra, S. S., Zhang, L., Li, Y.-J., MacWhinney, B., Tsao, Y., Provost, E. M., & Sisman, B.', v: 'arXiv:2609.00276', l: ax('2609.00276') },
+    { y: 2026, t: 'AffectDF: The Most Comprehensive Benchmark for Speech Deepfake Detection against Emotionally Expressive Attacks', a: 'Mahapatra, A., Zhao, X., Chandra, S. S., Zhang, Z., Du, Z., Ulgen, I. R., Lee, K. A., Andrews, N., Busso, C., & Sisman, B.', v: 'arXiv:2608.05507', l: ax('2608.05507') },
+    { y: 2026, t: 'Disentangling the Interpretive and Predictive Roles of LIWC: Controlled Substitution in Depression-Related Classification', a: 'Yeh, H.-C., Zhao, X., Mahapatra, A., Chandra, S. S., Boyd, R. L., & Sisman, B.', v: 'arXiv:2607.22952', l: ax('2607.22952') },
+    { y: 2026, t: 'TRACE-EVC: Text-Guided Relative Affective Control for Zero-Shot Emotional Voice Conversion', a: 'Zhang, Z., Chandra, S. S., Du, Z., Zhao, X., Mahapatra, A., Zhang, H., Koehn, P., & Sisman, B.', v: 'arXiv:2607.03666', l: ax('2607.03666') },
+    { y: 2026, t: 'Who is Speaking or Who is Depressed? A Controlled Study of Speaker Leakage in Speech-Based Depression Detection', a: 'Yeh, H.-C., Sun, L., Mahapatra, A., Chandra, S. S., Provost, E. M., & Sisman, B.', v: 'arXiv:2604.14354', l: ax('2604.14354') },
+    { y: 2026, t: 'Natural Language as the Interface to Speaking Style: Describing and Controlling How Speech Is Delivered', a: 'Chandra, S. S.', v: 'ISCA Doctoral Consortium 2026, pp. 24–26', l: [['Paper', 'https://www.isca-archive.org/dc_2026/chandra26_dc.html']], first: true },
+    { y: 2025, t: 'NaturalVoices: A Large-Scale, Spontaneous and Emotional Podcast Dataset for Voice Conversion', a: 'Du, Z., Chandra, S. S., Ulgen, I. R., Mahapatra, A., Salman, A. N., Busso, C., & Sisman, B.', v: 'arXiv:2511.00256', l: ax('2511.00256') },
+    { y: 2025, t: 'EmotionRankCLAP: Bridging Natural Language Speaking Styles and Ordinal Speech Emotion via Rank-N-Contrast', a: 'Chandra, S. S., Goncalves, L., Lu, J., Busso, C., & Sisman, B.', v: 'Interspeech 2025', l: ax('2505.23732'), first: true },
+    { y: 2025, t: 'Advancing Pediatric ASR: The Role of Voice Generation in Disordered Speech', a: 'Rosero, K., Salman, A. N., Chandra, S. S., Sisman, B., Van’t Slot, C., Kane, A. A., Hallac, R. R., & Busso, C.', v: 'Interspeech 2025', l: [['Paper', 'https://www.isca-archive.org/interspeech_2025/rosero25_interspeech.html']] },
+    { y: 2024, t: 'Text-to-Speech for Unseen Speakers via Low-Complexity Discrete Unit-Based Frame Selection', a: 'Ulgen, I. R.*, Chandra, S. S.*, Lu, J., & Sisman, B.', v: 'arXiv:2408.17432 · submitted to IEEE Signal Processing Letters · *equal contribution', l: ax('2408.17432'), first: true },
+    { y: 2024, t: 'Towards Naturalistic Voice Conversion: NaturalVoices Dataset with an Automatic Processing Pipeline', a: 'Salman, A. N., Du, Z., Chandra, S. S., Ulgen, I. R., Busso, C., & Sisman, B.', v: 'Interspeech 2024, pp. 4358–4362', l: ax('2406.04494') },
+    { y: 2024, t: 'Style Mixture of Experts for Expressive Text-To-Speech Synthesis', a: 'Jawaid, A., Chandra, S. S., Lu, J., & Sisman, B.', v: 'NeurIPS 2024 Audio Imagination Workshop', l: ax('2406.03637') },
+    { y: 2024, t: 'Exploring Speech Style Spaces with Language Models: Emotional TTS without Emotion Labels', a: 'Chandra, S. S., Du, Z., & Sisman, B.', v: 'ISCA Speaker Odyssey 2024', l: ax('2405.11413'), first: true },
+    { y: 2021, t: 'Differences in the Spatial Integration of Discrete/Continuous Spectral Signals', a: 'Chandra, S. S., Arthi, S., & Sreenivas, T. V.', v: 'IEEE CONECCT 2021, Bengaluru', l: [['Paper', 'https://ieeexplore.ieee.org/document/9622603'], ['Slides', 'https://drive.google.com/file/d/18fg3o7StX7jr_tq5JHFR4p8rxaidXBXa/view']], first: true },
+    { y: 2021, t: 'Deep Neural Network Architectures for Spectrum Sensing Using Signal Processing Features', a: 'Chandra, S. S., Upadhye, A., Saravanan, P., & Gurugopinath, S.', v: 'IEEE DISCOVER 2021, Nitte', l: [['Paper', 'https://ieeexplore.ieee.org/document/9663583'], ['Slides', 'https://drive.google.com/file/d/1c_R0Y06doVmHBUNeXGbbjJC7rkSIEpT4/view']], first: true },
+    { y: 2021, t: 'A Survey on Machine Learning Algorithms for Applications in Cognitive Radio Networks', a: 'Upadhye, A., Saravanan, P., Chandra, S. S., & Gurugopinath, S.', v: 'IEEE CONECCT 2021, pp. 1–6', l: [['Paper', 'https://ieeexplore.ieee.org/abstract/document/9622610/']] },
+    { y: 2021, t: 'A Supervised Learning Approach for Differential Entropy Feature-Based Spectrum Sensing', a: 'Saravanan, P., Chandra, S. S., Upadhye, A., & Gurugopinath, S.', v: 'IEEE WiSPNET 2021, pp. 395–399', l: [['Paper', 'https://ieeexplore.ieee.org/abstract/document/9419447/']] },
+    { y: 2020, t: 'Automated Mythological Scene Recognition Using Machine Learning and Graphs', a: 'Bharadwaj, A. R., Chandra, S. S., Nair, D. S., Hatim, A. R., & Ravikumar, A.', v: 'IEEE AISP 2020, pp. 1–5', l: [['Paper', 'https://ieeexplore.ieee.org/abstract/document/9073474/']] }
+  ];
+  const link = (u, text, cls = '') => `<a${cls ? ` class="${cls}"` : ''} href="${u}" target="_blank" rel="noopener">${text}</a>`;
+
+  $('#cards').innerHTML = PROJECTS.map(p => `
+    <article class="card">
+      <header class="card-title"><h3>${p.t}</h3><span class="card-venue">${p.v}</span></header>
+      <p>${p.d}</p>
+      ${p.u ? link(p.u, 'Read the paper ↗', 'card-link') : '<span class="card-link muted">Website coming soon</span>'}
+    </article>`).join('');
+
+  const bold = s => s.replace(/Chandra, S\. S\.\*?/g, m => `<b>${m}</b>`);
+  let pubShown = PUBS.length;
+  function renderPubs() {
+    const onlyFirst = $('#first-only').checked;
+    const list = PUBS.filter(p => !onlyFirst || p.first);
+    const years = [...new Set(list.map(p => p.y))];
+    $('#pub-list').innerHTML = years.map(y => {
+      const items = list.filter(p => p.y === y);
+      return `<section class="year"><h3><span>${y}</span><span class="year-n">${items.length} ${items.length === 1 ? 'item' : 'items'}</span></h3><ol class="pubs">${items.map(p => `
+        <li class="pub"><span class="pub-title">${p.t}</span><span class="pub-auth">${bold(p.a)}</span><span class="pub-venue">${p.v}</span><span class="pub-links">${p.l.map(([n, u]) => link(u, n + ' ↗')).join('')}</span></li>`).join('')}</ol></section>`;
+    }).join('');
+    pubShown = list.length;
+    updateResearchInfo();
+  }
+  function updateResearchInfo() {
+    const pubsOn = $('#tab-pubs').getAttribute('aria-selected') === 'true';
+    $('#first-wrap').hidden = !pubsOn;
+    $('#research-count').textContent = pubsOn
+      ? `${pubShown} items${$('#first-only').checked ? ' as first author' : ''} · 2020–2026`
+      : `${PROJECTS.length} projects · newest first`;
+  }
+  $('#first-only').addEventListener('change', renderPubs);
+  $$('[role="tab"]').forEach(tab => tab.addEventListener('click', () => {
+    $$('[role="tab"]', tab.closest('[role="tablist"]')).forEach(t => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      $('#' + t.getAttribute('aria-controls')).hidden = !on;
+    });
+    updateResearchInfo();
+  }));
+  renderPubs();
+
+  // "Built-in memory": papers per year, drawn to scale with classic 1-bit fill patterns.
+  (() => {
+    const PATS = [
+      'var(--ink)',
+      'repeating-linear-gradient(45deg, var(--ink) 0 2px, var(--paper) 2px 4px)',
+      'conic-gradient(var(--ink) 25%, var(--paper) 0 50%, var(--ink) 0 75%, var(--paper) 0) 0 0 / 4px 4px',
+      'radial-gradient(var(--ink) 0.8px, var(--paper) 1.2px) 0 0 / 4px 4px',
+      'var(--paper)'
+    ];
+    const years = [...new Set(PUBS.map(p => p.y))];
+    const counts = years.map(y => PUBS.filter(p => p.y === y).length);
+    $('#mem-total').textContent = `${PUBS.length} papers since ${years[years.length - 1]}`;
+    $('#mem-bar').innerHTML = years.map((y, i) => `<span style="flex:${counts[i]};background:${PATS[i % PATS.length]}" title="${y}: ${counts[i]}"></span>`).join('');
+    $('#mem-legend').innerHTML = years.map((y, i) => `<span><i style="background:${PATS[i % PATS.length]}"></i>${y} · ${counts[i]}</span>`).join('');
+  })();
+
+  /* ---------- windows ---------- */
+  const wins = $$('.win');
+  const winById = Object.fromEntries(wins.map(w => [w.dataset.win, w]));
+  const DEFAULTS = { about: [.05, 18], research: [.24, 40], notes: [.3, 64], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
+  const openers = {};
+  let zTop = 10;
+
+  function placeWin(w) {
+    if (w.dataset.placed || narrow()) return;
+    const [fx, fy] = DEFAULTS[w.dataset.win] || [.2, 40];
+    const dw = desk.clientWidth, dh = desk.clientHeight;
+    // Keep new windows clear of the icon columns on the right.
+    const iconLeft = Math.min(...$$('.icon', iconsBox).map(i => i.getBoundingClientRect().left)) - desk.getBoundingClientRect().left;
+    const x = Math.max(16, Math.min(Math.round(fx * dw), iconLeft - w.offsetWidth - 12));
+    const y = Math.max(8, Math.min(fy, dh - w.offsetHeight - 8));
+    w.style.left = x + 'px';
+    w.style.top = y + 'px';
+    w.dataset.placed = '1';
+  }
+  function clampWin(w) {
+    const dw = desk.clientWidth, dh = desk.clientHeight;
+    w.style.left = Math.max(-w.offsetWidth + 80, Math.min(w.offsetLeft, dw - 80)) + 'px';
+    w.style.top = Math.max(0, Math.min(w.offsetTop, dh - 30)) + 'px';
+  }
+  function front(w) {
+    w.style.zIndex = ++zTop;
+    wins.forEach(x => x.classList.toggle('is-front', x === w));
+    frontApp.textContent = w.dataset.app || 'Finder';
+  }
+  const topVisible = () => wins.filter(w => !w.hidden).sort((a, b) => (+b.style.zIndex || 0) - (+a.style.zIndex || 0))[0];
+  const isShown = el => el && el.isConnected && el.offsetParent !== null;
+
+  function zoomRects(a, b, done) {
+    const N = 7, dur = 230, layer = document.createElement('div');
+    layer.className = 'zoom-layer';
+    document.body.append(layer);
+    const boxes = [];
+    const t0 = performance.now();
+    const frame = t => {
+      const p = Math.min(1, (t - t0) / dur);
+      while (boxes.length <= Math.floor(p * N)) {
+        const k = boxes.length / N, el = document.createElement('div');
+        el.className = 'zoom-box';
+        el.style.left = a.left + (b.left - a.left) * k + 'px';
+        el.style.top = a.top + (b.top - a.top) * k + 'px';
+        el.style.width = a.width + (b.width - a.width) * k + 'px';
+        el.style.height = a.height + (b.height - a.height) * k + 'px';
+        layer.append(el);
+        boxes.push(el);
+        if (boxes.length > 3) boxes[boxes.length - 4].remove();
+      }
+      if (p < 1) requestAnimationFrame(frame);
+      else { layer.remove(); if (done) done(); }
+    };
+    requestAnimationFrame(frame);
+  }
+
+  function openWin(id, from) {
+    const w = winById[id];
+    if (!w) return;
+    if (!w.hidden) { front(w); w.focus({ preventScroll: true }); return; }
+    const fromRect = isShown(from) ? from.getBoundingClientRect() : null;
+    w.hidden = false;
+    placeWin(w);
+    front(w);
+    openers[id] = from || null;
+    w.dispatchEvent(new Event('winopen'));
+    if (fromRect && fromRect.width && !reduceMotion && !narrow()) {
+      w.style.visibility = 'hidden';
+      zoomRects(fromRect, w.getBoundingClientRect(), () => { w.style.visibility = ''; w.focus({ preventScroll: true }); });
+    } else {
+      w.focus({ preventScroll: true });
+    }
+  }
+  function closeWin(w, quiet) {
+    if (!w || w.hidden) return;
+    const r = w.getBoundingClientRect(), to = openers[w.dataset.win];
+    w.hidden = true;
+    w.style.visibility = '';
+    w.classList.remove('is-front');
+    w.dispatchEvent(new Event('winclose'));
+    if (!quiet && isShown(to) && !reduceMotion && !narrow()) zoomRects(r, to.getBoundingClientRect());
+    const next = topVisible();
+    if (next) front(next); else frontApp.textContent = 'Finder';
+    if (!quiet && isShown(to)) to.focus({ preventScroll: true });
+  }
+  function zoomWin(w) {
+    if (narrow()) return;
+    if (w.dataset.zoomed) {
+      Object.assign(w.style, JSON.parse(w.dataset.zoomed));
+      delete w.dataset.zoomed;
+      return;
+    }
+    w.dataset.zoomed = JSON.stringify({ left: w.style.left, top: w.style.top, width: w.style.width, height: w.style.height });
+    Object.assign(w.style, { left: '8px', top: '8px', width: (desk.clientWidth - 140) + 'px', height: (desk.clientHeight - 16) + 'px' });
+    front(w);
+  }
+
+  function draggable(el, handle, onStart) {
+    handle.addEventListener('pointerdown', e => {
+      if (e.button !== 0 || narrow()) return;
+      const hit = e.target.closest('button, a, input, select, textarea');
+      if (hit && hit !== handle) return;
+      const sx = e.clientX, sy = e.clientY;
+      let ox = 0, oy = 0, px = 0, py = 0, moved = false;
+      try { handle.setPointerCapture(e.pointerId); } catch (err) { /* capture is optional */ }
+      const move = ev => {
+        const dx = ev.clientX - sx, dy = ev.clientY - sy;
+        if (!moved) {
+          if (Math.abs(dx) + Math.abs(dy) < 5) return;
+          moved = true;
+          if (onStart) onStart();
+          ox = el.offsetLeft; oy = el.offsetTop;
+          const p = el.offsetParent;
+          px = p && p !== desk ? p.offsetLeft : 0;
+          py = p && p !== desk ? p.offsetTop : 0;
+          el.classList.add('is-dragging');
+        }
+        const dw = desk.clientWidth, dh = desk.clientHeight;
+        el.style.left = Math.max(-el.offsetWidth + 60 - px, Math.min(ox + dx, dw - 60 - px)) + 'px';
+        el.style.top = Math.max(-py, Math.min(oy + dy, dh - 24 - py)) + 'px';
+      };
+      const up = () => {
+        handle.removeEventListener('pointermove', move);
+        handle.removeEventListener('pointerup', up);
+        handle.removeEventListener('pointercancel', up);
+        el.classList.remove('is-dragging');
+        if (moved) { el.dataset.dragged = '1'; setTimeout(() => { delete el.dataset.dragged; }, 60); }
+      };
+      handle.addEventListener('pointermove', move);
+      handle.addEventListener('pointerup', up);
+      handle.addEventListener('pointercancel', up);
+    });
+  }
+
+  wins.forEach(w => {
+    const bar = $('.win-title', w);
+    $('.win-close', w).addEventListener('click', e => { e.stopPropagation(); closeWin(w); });
+    $('.win-zoom', w).addEventListener('click', e => { e.stopPropagation(); zoomWin(w); });
+    w.addEventListener('pointerdown', () => { if (!w.classList.contains('is-front')) front(w); });
+    w.addEventListener('focusin', () => { if (!w.classList.contains('is-front')) front(w); });
+    bar.addEventListener('dblclick', e => { if (!e.target.closest('button')) zoomWin(w); });
+    draggable(w, bar);
+  });
+
+  /* ---------- icons and sticky note ---------- */
+  const deskIcons = () => [...$$('.icon', iconsBox), $('.icon.trash')];
+  let frozen = false;
+  function freezeIcons() {
+    if (frozen) return;
+    frozen = true;
+    const br = iconsBox.getBoundingClientRect();
+    const items = $$('.icon', iconsBox);
+    const pos = items.map(i => { const r = i.getBoundingClientRect(); return [r.left - br.left, r.top - br.top]; });
+    items.forEach((i, k) => { i.classList.add('is-free'); i.style.left = pos[k][0] + 'px'; i.style.top = pos[k][1] + 'px'; });
+  }
+  function cleanUp() {
+    frozen = false;
+    deskIcons().forEach(i => { i.classList.remove('is-free', 'is-selected'); i.style.left = ''; i.style.top = ''; });
+    const s = $('#sticky');
+    s.classList.remove('is-moved');
+    s.style.left = ''; s.style.top = '';
+  }
+  let lastPointer = 'mouse';
+  document.addEventListener('pointerdown', e => { lastPointer = e.pointerType; }, true);
+  deskIcons().forEach(icon => {
+    const isTrash = icon.classList.contains('trash');
+    draggable(icon, icon, () => {
+      if (isTrash) {
+        icon.style.left = icon.offsetLeft + 'px';
+        icon.style.top = icon.offsetTop + 'px';
+        icon.classList.add('is-free');
+      } else freezeIcons();
+    });
+    icon.addEventListener('click', e => {
+      if (icon.dataset.dragged) return;
+      if (e.detail === 0 || lastPointer !== 'mouse' || narrow()) { openWin(icon.dataset.open, icon); return; }
+      deskIcons().forEach(i => i.classList.toggle('is-selected', i === icon));
+    });
+    icon.addEventListener('dblclick', () => openWin(icon.dataset.open, icon));
+  });
+  const sticky = $('#sticky');
+  draggable(sticky, sticky, () => {
+    sticky.style.left = sticky.offsetLeft + 'px';
+    sticky.style.top = sticky.offsetTop + 'px';
+    sticky.classList.add('is-moved');
+  });
+  desk.addEventListener('pointerdown', e => {
+    if (e.target === desk || e.target === iconsBox) deskIcons().forEach(i => i.classList.remove('is-selected'));
+  });
+
+  /* ---------- menus and actions ---------- */
+  const titles = $$('.menu-title');
+  let openMenu = null;
+  function closeMenus() {
+    titles.forEach(t => { t.classList.remove('is-open'); t.setAttribute('aria-expanded', 'false'); t.nextElementSibling.hidden = true; });
+    openMenu = null;
+  }
+  function showMenu(t) {
+    closeMenus();
+    t.classList.add('is-open');
+    t.setAttribute('aria-expanded', 'true');
+    t.nextElementSibling.hidden = false;
+    openMenu = t;
+  }
+  titles.forEach(t => {
+    t.addEventListener('click', e => { e.stopPropagation(); if (openMenu === t) closeMenus(); else showMenu(t); });
+    t.addEventListener('pointerenter', () => { if (openMenu && openMenu !== t) showMenu(t); });
+  });
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-action]');
+    if (!e.target.closest('.menu')) closeMenus();
+    if (!a) return;
+    e.preventDefault();
+    const inMenu = !!a.closest('.menu');
+    closeMenus();
+    run(a.dataset.action, inMenu ? null : a);
+  });
+
+  const toastEl = $('#toast');
+  let toastTimer = 0;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toastEl.hidden = true; }, 2400);
+  }
+  function copyEmail() {
+    const fallback = () => {
+      openWin('about');
+      const range = document.createRange();
+      range.selectNodeContents($('#email-text'));
+      const sel = getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      toast('Selected. Press ⌘C to copy');
+    };
+    try { navigator.clipboard.writeText(EMAIL).then(() => toast('Email copied'), fallback); } catch (err) { fallback(); }
+  }
+  function run(action, src) {
+    const [cmd, arg] = action.split(':');
+    if (cmd === 'open') openWin(arg, src);
+    else if (cmd === 'close-front') closeWin(topVisible());
+    else if (cmd === 'close-all') wins.forEach(w => closeWin(w, true));
+    else if (cmd === 'copy-email') copyEmail();
+    else if (cmd === 'clean-up') cleanUp();
+    else if (cmd === 'empty-trash') { $('#alert').hidden = false; $('#alert-ok').focus(); }
+    else if (cmd === 'restart') restart();
+  }
+  $('#alert-ok').addEventListener('click', () => { $('#alert').hidden = true; });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (openMenu) closeMenus();
+      else if (!$('#alert').hidden) $('#alert').hidden = true;
+      else closeWin(topVisible());
+    } else if (e.key === ' ' && nets.on && winById.beyond.classList.contains('is-front') && !e.target.closest('button, a, input')) {
+      e.preventDefault();
+      swing();
+    }
+  });
+
+  const clock = $('#clock');
+  function tick() {
+    const d = new Date();
+    clock.textContent = d.toLocaleDateString(undefined, { weekday: 'short' }) + ' ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  }
+  tick();
+  setInterval(tick, 15000);
+
+  /* ---------- lab notes: the ? block ---------- */
+  let hits = 0;
+  $('#qblock').addEventListener('click', e => {
+    const b = e.currentTarget;
+    hits++;
+    b.classList.remove('is-bumped');
+    void b.offsetWidth;
+    b.classList.add('is-bumped');
+    $('#qblock-msg').textContent = hits === 1 ? 'Nothing yet. Hit it again later.' : `Still nothing. Hits so far: ${hits}.`;
+  });
+
+  /* ---------- currently listening: a synthesized flute ---------- */
+  const SA = 293.66; // Sa at D4
+  const TRACKS = [
+    { title: 'Mohanam: arohanam and avarohanam', beat: .36,
+      notes: [[0, 1], [2, 1], [4, 1.5], [7, 1], [9, 1], [12, 2], [12, 1], [9, 1], [7, 1], [4, 1.5], [2, 1], [0, 2], [4, .5], [7, .5], [9, 1], [7, .5], [4, .5], [2, 1], [0, 3]] },
+    { title: 'Hamsadhwani: a short phrase', beat: .34,
+      notes: [[0, 1], [2, 1], [4, 1], [7, 1], [11, 1], [12, 2], [11, .5], [7, .5], [4, 1], [7, .5], [11, .5], [12, 1.5], [11, 1], [7, 1], [4, 1], [2, 1], [0, 3]] }
+  ];
+  TRACKS.forEach(t => { t.dur = t.notes.reduce((s, n) => s + n[1], 0) * t.beat; });
+  const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  const pl = { ctx: null, track: 0, t0: 0, src: null, playing: false, raf: 0 };
+  const spec = $('#spectrum').getContext('2d');
+  const specData = new Uint8Array(128);
+
+  function audio() {
+    if (pl.ctx) return pl.ctx;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    const ctx = new AC();
+    const master = ctx.createGain();
+    master.gain.value = .32;
+    const an = ctx.createAnalyser();
+    an.fftSize = 256;
+    an.smoothingTimeConstant = .7;
+    master.connect(an);
+    an.connect(ctx.destination);
+    pl.wave = ctx.createPeriodicWave(new Float32Array([0, 1, .22, .08, .03]), new Float32Array(5));
+    const nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const d = nb.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    Object.assign(pl, { ctx, master, analyser: an, noise: nb });
+    return ctx;
+  }
+  function stopVoice() {
+    if (!pl.src) return;
+    pl.src.forEach(n => { n.onended = null; try { n.stop(); } catch (err) { /* already stopped */ } });
+    pl.src = null;
+  }
+  function playTrack(i) {
+    pl.track = i;
+    const ctx = audio();
+    if (!ctx) { $('#lcd-title').textContent = 'Audio is not available here'; return; }
+    stopVoice();
+    if (ctx.state === 'suspended') ctx.resume();
+    const tr = TRACKS[i];
+    const t0 = ctx.currentTime + .08;
+    pl.t0 = t0;
+    const osc = ctx.createOscillator();
+    osc.setPeriodicWave(pl.wave);
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = 5.2;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 1.6;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    const breath = ctx.createBufferSource();
+    breath.buffer = pl.noise;
+    breath.loop = true;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = .8;
+    const breathGain = ctx.createGain();
+    breathGain.gain.value = .05;
+    const env = ctx.createGain();
+    env.gain.value = 0;
+    osc.connect(env);
+    breath.connect(bp); bp.connect(breathGain); breathGain.connect(env);
+    env.connect(pl.master);
+    let t = t0;
+    tr.notes.forEach(([semi, beats], k) => {
+      const f = SA * Math.pow(2, semi / 12);
+      if (k === 0) {
+        osc.frequency.setValueAtTime(f, t);
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(.5, t + .06);
+      } else {
+        osc.frequency.setTargetAtTime(f, t, .018);
+        env.gain.linearRampToValueAtTime(.5, t - .035);
+        env.gain.linearRampToValueAtTime(.24, t - .006);
+        env.gain.linearRampToValueAtTime(.5, t + .04);
+      }
+      t += beats * tr.beat;
+    });
+    env.gain.linearRampToValueAtTime(.42, t - .12);
+    env.gain.linearRampToValueAtTime(0, t + .06);
+    [osc, lfo, breath].forEach(n => { n.start(t0); n.stop(t + .1); });
+    pl.src = [osc, lfo, breath];
+    osc.onended = () => { if (pl.src && pl.src[0] === osc) { pl.src = null; setPlaying(false); drawPlayer(); } };
+    setPlaying(true);
+    showTrack();
+    playerLoop();
+  }
+  function setPlaying(on) {
+    pl.playing = on;
+    const b = $('#play');
+    b.textContent = on ? '❚❚ Pause' : '▶ Play';
+    b.setAttribute('aria-label', on ? 'Pause' : 'Play');
+    $('#lcd').classList.toggle('is-playing', on);
+  }
+  function showTrack() {
+    $('#lcd-title').textContent = TRACKS[pl.track].title;
+    $$('#playlist button').forEach((b, i) => b.setAttribute('aria-current', String(i === pl.track)));
+    drawPlayer();
+  }
+  function drawPlayer() {
+    const tr = TRACKS[pl.track];
+    const el = pl.src && pl.ctx ? Math.max(0, Math.min(tr.dur, pl.ctx.currentTime - pl.t0)) : 0;
+    $('#lcd-time').textContent = `${fmt(el)} / ${fmt(tr.dur)}`;
+    spec.clearRect(0, 0, 48, 14);
+    spec.fillStyle = '#17402c';
+    if (pl.analyser && pl.src) pl.analyser.getByteFrequencyData(specData); else specData.fill(0);
+    for (let j = 0; j < 12; j++) {
+      const v = specData[1 + j * 2] / 255;
+      const h = Math.max(1, Math.round(v * 14));
+      spec.fillRect(j * 4, 14 - h, 3, h);
+    }
+  }
+  function playerLoop() {
+    cancelAnimationFrame(pl.raf);
+    const step = () => { drawPlayer(); if (pl.playing) pl.raf = requestAnimationFrame(step); };
+    step();
+  }
+  $('#playlist').innerHTML = TRACKS.map((t, i) => `<li><button data-track="${i}" aria-current="${i === 0}"><span>${t.title} · flute synth</span><span class="dur">${fmt(t.dur)}</span></button></li>`).join('');
+  $('#playlist').addEventListener('click', e => { const b = e.target.closest('[data-track]'); if (b) playTrack(+b.dataset.track); });
+  $('#play').addEventListener('click', () => {
+    if (!pl.src) { playTrack(pl.track); return; }
+    if (pl.ctx.state === 'running') { pl.ctx.suspend(); setPlaying(false); }
+    else { pl.ctx.resume(); setPlaying(true); playerLoop(); }
+  });
+  $('#prev').addEventListener('click', () => playTrack((pl.track + TRACKS.length - 1) % TRACKS.length));
+  $('#next').addEventListener('click', () => playTrack((pl.track + 1) % TRACKS.length));
+  winById.music.addEventListener('winclose', () => {
+    stopVoice();
+    setPlaying(false);
+    if (pl.ctx && pl.ctx.state === 'suspended') pl.ctx.resume();
+    drawPlayer();
+  });
+  showTrack();
+
+  /* ---------- garden ---------- */
+  const PLANTS = [
+    { name: 'Tulsi', f: '#8a5cc2', s: 2 },
+    { name: 'Curry leaf', f: '#f4f1e8', s: 2 },
+    { name: 'Cherry tomato', f: '#d1462f', s: 1 },
+    { name: 'Marigold', f: '#f08a24', s: 3 }
+  ];
+  const STAGES = ['seed', 'sprout', 'leafy', 'flowering'];
+  let gDay = 1;
+  let gStage = PLANTS.map(p => p.s);
+  function renderGarden() {
+    $('#garden-grid').innerHTML = PLANTS.map((p, i) => `
+      <button class="plot" data-plot="${i}" aria-label="Water the ${p.name}, now ${STAGES[gStage[i]]}">
+        <span class="plot-sky">${pixelSVG(PLANT_STAGES[gStage[i]], { ...PAL, f: p.f, y: '#f6c945' })}</span>
+        <span class="plot-soil"></span>
+        <span class="plot-name">${p.name}</span>
+        <span class="plot-stage">${STAGES[gStage[i]]}</span>
+      </button>`).join('');
+    $('#garden-day').textContent = `Day ${gDay}`;
+  }
+  $('#garden-grid').addEventListener('click', e => {
+    const b = e.target.closest('.plot');
+    if (!b || b.dataset.busy) return;
+    const i = +b.dataset.plot;
+    b.dataset.busy = '1';
+    b.insertAdjacentHTML('beforeend', '<span class="drops" aria-hidden="true"><i></i><i></i><i></i><i></i></span>');
+    setTimeout(() => {
+      const p = PLANTS[i];
+      const GREW = ['', 'It sprouted.', 'It is leafy now.', 'It flowered!'];
+      let msg;
+      if (gStage[i] < 3) { gStage[i]++; msg = `Watered the ${p.name}. ${GREW[gStage[i]]}`; }
+      else msg = `Watered the ${p.name}. It is already flowering.`;
+      gDay++;
+      renderGarden();
+      $('#garden-status').textContent = msg;
+      const again = $(`.plot[data-plot="${i}"]`);
+      if (again) again.focus({ preventScroll: true });
+    }, reduceMotion ? 0 : 480);
+  });
+  $('#garden-reset').addEventListener('click', () => {
+    gDay = 1;
+    gStage = PLANTS.map(() => 0);
+    renderGarden();
+    $('#garden-status').textContent = 'Fresh seeds, day 1.';
+  });
+  renderGarden();
+
+  /* ---------- nets: a tiny batting game ---------- */
+  const nets = { on: false, balls: 0, runs: 0, wkts: 0, ball: null, swing: 0, swung: false, wait: 0, raf: 0, last: 0 };
+  const g = $('#nets').getContext('2d');
+  const say = m => { $('#nets-msg').textContent = m; };
+  const updateNetsBar = () => { $('#nets-score').textContent = `Runs ${nets.runs} · Balls ${nets.balls}/6 · Wickets ${nets.wkts}`; };
+  function netsDraw() {
+    const b = nets.ball;
+    g.fillStyle = '#cfe6f2'; g.fillRect(0, 0, 200, 84);
+    g.fillStyle = '#6f8fb6'; g.fillRect(0, 22, 200, 6);
+    g.fillStyle = '#7fb36a'; g.fillRect(0, 28, 200, 56);
+    g.fillStyle = '#d8c48f'; g.fillRect(14, 50, 182, 14);
+    g.fillStyle = '#fbfaf4'; g.fillRect(34, 50, 1, 14); g.fillRect(170, 50, 1, 14);
+    g.fillStyle = '#f4ecd6';
+    if (b && b.stumps) { g.fillRect(21, 44, 1, 8); g.fillRect(23, 42, 1, 10); g.fillRect(25, 45, 1, 7); g.fillRect(17, 37, 2, 1); g.fillRect(28, 35, 2, 1); }
+    else { [21, 23, 25].forEach(x => g.fillRect(x, 40, 1, 12)); g.fillRect(21, 39, 5, 1); }
+    g.fillStyle = '#23305e'; g.fillRect(30, 32, 5, 4);
+    g.fillStyle = '#e9b48a'; g.fillRect(31, 36, 3, 2);
+    g.fillStyle = '#fbfaf4'; g.fillRect(29, 38, 7, 8); g.fillRect(30, 46, 2, 6); g.fillRect(33, 46, 2, 6);
+    const ang = nets.swing > 0 ? 4.0 - (1 - nets.swing / .22) * 4.6 : 1.9;
+    g.save(); g.translate(36, 42); g.rotate(ang);
+    g.fillStyle = '#e8cf96'; g.fillRect(0, -1, 11, 2);
+    g.fillStyle = '#5f5a55'; g.fillRect(0, -1, 3, 2);
+    g.restore();
+    g.fillStyle = '#fbfaf4'; g.fillRect(180, 38, 5, 9); g.fillRect(180, 47, 2, 6); g.fillRect(183, 47, 2, 6);
+    g.fillStyle = '#e9b48a'; g.fillRect(181, 34, 3, 4);
+    if (b && b.phase !== 'gone' && !b.stumps) { g.fillStyle = '#c0392b'; g.fillRect(Math.round(b.x) - 1, Math.round(b.y) - 1, 2, 2); }
+  }
+  function newBall() {
+    nets.ball = { x: 176, y: 38, v: 95 + Math.random() * 35, endY: 40 + Math.random() * 7, phase: 'bowl', vx: 0, vy: 0, stumps: false };
+    nets.swung = false;
+    say('');
+  }
+  function endBall() {
+    nets.balls++;
+    updateNetsBar();
+    clearTimeout(nets.wait);
+    nets.wait = setTimeout(() => {
+      if (!nets.on) return;
+      if (nets.balls >= 6) {
+        nets.on = false;
+        say(`Over done: ${nets.runs}/${nets.wkts}`);
+        $('#nets-start').textContent = 'Bowl again';
+      } else newBall();
+    }, 1300);
+  }
+  function netsStep(ts) {
+    const dt = Math.min(.05, (ts - (nets.last || ts)) / 1000);
+    nets.last = ts;
+    if (nets.swing > 0) nets.swing = Math.max(0, nets.swing - dt);
+    const b = nets.ball;
+    if (b && b.phase === 'bowl') {
+      b.x -= b.v * dt;
+      b.y = b.x > 96 ? 38 + (176 - b.x) / 80 * 22 : 60 - (96 - b.x) / 56 * (60 - b.endY);
+      if (b.x <= 26) {
+        b.phase = 'dead';
+        if (b.y >= 40) { b.stumps = true; nets.wkts++; say('Bowled!'); }
+        else say(nets.swung ? 'Beaten!' : 'Left alone. Dot ball.');
+        endBall();
+      }
+    } else if (b && b.phase === 'hit') {
+      b.x += b.vx * dt;
+      b.vy += 150 * dt;
+      b.y += b.vy * dt;
+      if (b.y > 62 && b.vy > 0) { b.y = 62; b.vy *= -.4; b.vx *= .7; }
+      if (b.x > 205 || b.y < -10) b.phase = 'gone';
+    }
+    netsDraw();
+    if (nets.on || nets.swing > 0 || (b && b.phase === 'hit')) nets.raf = requestAnimationFrame(netsStep);
+  }
+  function swing() {
+    if (!nets.on || nets.swing > 0) return;
+    nets.swing = .22;
+    const b = nets.ball;
+    if (!b || b.phase !== 'bowl' || nets.swung) return;
+    nets.swung = true;
+    const d = Math.abs(b.x - 40);
+    if (b.x > 51) { say('Too early!'); return; }
+    if (d <= 3) { nets.runs += 6; say('SIX!'); b.vx = 190; b.vy = -120; }
+    else if (d <= 7) { nets.runs += 4; say('FOUR!'); b.vx = 210; b.vy = -30; }
+    else if (d <= 11) { nets.runs += 1; say('Edged. One run.'); b.vx = 90; b.vy = -60; }
+    else { say('Too late!'); return; }
+    b.phase = 'hit';
+    endBall();
+  }
+  function startNets() {
+    Object.assign(nets, { on: true, balls: 0, runs: 0, wkts: 0, last: 0 });
+    updateNetsBar();
+    newBall();
+    $('#nets-start').textContent = 'Restart';
+    cancelAnimationFrame(nets.raf);
+    nets.raf = requestAnimationFrame(netsStep);
+    $('#nets').focus({ preventScroll: true });
+  }
+  function stopNets() {
+    nets.on = false;
+    clearTimeout(nets.wait);
+    cancelAnimationFrame(nets.raf);
+  }
+  $('#nets-start').addEventListener('click', startNets);
+  $('#nets-swing').addEventListener('click', swing);
+  $('#nets').addEventListener('pointerdown', e => { e.preventDefault(); if (nets.on) swing(); else startNets(); });
+  $('#nets').addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); if (nets.on) swing(); else startNets(); } });
+  winById.beyond.addEventListener('winclose', stopNets);
+  netsDraw();
+
+  /* ---------- restart, resize, first view ---------- */
+  function initialState() {
+    if (!narrow()) openWin('research');
+    openWin('about');
+  }
+  function restart() {
+    wins.forEach(w => closeWin(w, true));
+    cleanUp();
+    if (reduceMotion) { initialState(); return; }
+    const boot = $('#boot');
+    boot.hidden = false;
+    boot.classList.remove('is-booting');
+    void boot.offsetWidth;
+    boot.classList.add('is-booting');
+    setTimeout(() => { boot.hidden = true; boot.classList.remove('is-booting'); initialState(); }, 2300);
+  }
+  addEventListener('resize', () => { if (!narrow()) wins.forEach(w => { if (!w.hidden && w.dataset.placed) clampWin(w); }); });
+  narrowMQ.addEventListener('change', () => {
+    if (narrow()) cleanUp();
+    else wins.forEach(w => { if (!w.hidden) { placeWin(w); clampWin(w); } });
+  });
+
+  initialState();
+  const hash = location.hash.slice(1);
+  if (winById[hash]) openWin(hash);
+})();
+</script>
+</body>
+</html>
