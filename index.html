@@ -315,7 +315,8 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 .plot-sky svg { display: block; width: 75px; height: 88px; margin: 0 auto; }
 .plot-soil { display: block; height: 18px; background: var(--soil); border-bottom: 1px solid var(--ink); }
 .plot-name { display: block; font: 600 18px/1.3 var(--f-display); padding: 8px 5px 0; }
-.plot-stage { display: block; font: 16px/1.3 var(--f-display); color: var(--ink-2); padding: 0 5px 10px; }
+.plot-latin { display: block; font: italic 14px/1.3 var(--f-body); color: var(--ink-2); padding: 1px 5px 0; }
+.plot-stage { display: block; font: 16px/1.3 var(--f-display); color: var(--ink-2); padding: 2px 5px 10px; }
 .drops i { position: absolute; top: 5px; width: 3px; height: 8px; background: var(--water); animation: drop .45s linear forwards; }
 .drops i:nth-child(1) { left: 34%; }
 .drops i:nth-child(2) { left: 48%; animation-delay: .08s; }
@@ -500,6 +501,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   .btn { min-height: 38px; }
   .tiles { grid-template-columns: minmax(0, 1fr); }
   .garden-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .plot:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .job { grid-template-columns: 56px minmax(0, 1fr); }
   .logo { width: 56px; height: 40px; }
   .logos .logo { height: 42px; }
@@ -799,9 +801,8 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   <!-- Garden -->
   <section class="win" id="win-garden" data-win="garden" data-app="Garden" role="dialog" aria-labelledby="t-garden" tabindex="-1" hidden>
     <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-garden">Garden.app</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
-    <div class="win-info"><span id="garden-day">Day 1</span><span>Click a plot to water it</span></div>
+    <div class="win-info"><span id="garden-day">Day 1</span><span>Click or tap a plant to water it</span></div>
     <div class="win-body">
-      <p class="draft">Draft: example plants for now.</p>
       <div class="garden-grid" id="garden-grid"></div>
       <div class="garden-foot">
         <p id="garden-status" aria-live="polite"></p>
@@ -1698,25 +1699,40 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   winById.music.addEventListener('winclose', ytStop);
   ytShow(ytCur, false);
 
-  /* ---------- garden ---------- */
+  /* ---------- garden: the plants Shreeram actually grows ---------- */
+  // Fully grown shapes, 12x14 like PLANT_STAGES: e/E are each plant's leaf greens, f its flowers, N the stem or soil.
+  const PLANT_GROWN = {
+    tree: ['....eeee....', '..eeeefeee..', '.eefeeeEeee.', '.eEeeeeeefe.', '..eeefeeEe..', '...eeNNee...', '.....NN.....',
+           '.....NN.....', '.....NN.....', '.....NN.....', '.....NN.....', '.....NN.....', '.....NN.....', '...NNNNNN...'],
+    spike: ['...f..f..f..', '..ff..ff.ff.', '..ff..ff.ff.', '..ff..ff.ff.', '...E..E..E..', '...E..E..E..', '...E..E..E..',
+            '....E.E.E...', '.ee.EEE.ee..', 'eeeeeEeeeee.', '.eeeeEeeee..', '..eeeEeee...', '.....E......', '...NNNNNN...'],
+    bush: ['............', '............', '....eeee....', '..eefeeeee..', '.eeeeeefeee.', 'eeEeeeeeeEee', 'eeeefeeeeeee',
+           '.eeeeeEeefe.', 'eeEeeeeeeeee', '.eeeeeeeEee.', '..eeeEEeee..', '.....EE.....', '.....EE.....', '...NNNNNN...']
+  };
   const PLANTS = [
-    { name: 'Tulsi', f: '#8a5cc2', s: 2 },
-    { name: 'Curry leaf', f: '#f4f1e8', s: 2 },
-    { name: 'Cherry tomato', f: '#d1462f', s: 1 },
-    { name: 'Marigold', f: '#f08a24', s: 3 }
+    { name: 'Curry leaf', latin: 'Murraya koenigii', kind: 'tree', e: '#4f9a3e', E: '#2f6b32', f: '#f4f1e8' },
+    { name: 'Lavender', latin: 'Lavandula', kind: 'spike', e: '#8fa58a', E: '#5f7a5c', f: '#8a6cc8' },
+    { name: 'Eucalyptus', latin: 'Eucalyptus', kind: 'tree', e: '#8fb8b0', E: '#5f8f88', f: '#b4d3cc' },
+    { name: 'Lemon balm', latin: 'Melissa officinalis', kind: 'bush', e: '#7cc552', E: '#4f9a3e', f: '#f4f1e8' },
+    { name: 'Lemon verbena', latin: 'Aloysia citrodora', kind: 'bush', e: '#9ccc65', E: '#5f8f3e', f: '#efe4f5' },
+    { name: 'Catnip', latin: 'Nepeta cataria', kind: 'spike', e: '#9fb39a', E: '#6b8166', f: '#e9e3f2' },
+    { name: 'Garden sage', latin: 'Salvia officinalis', kind: 'spike', e: '#9aab8f', E: '#66785e', f: '#6a63c2' }
   ];
-  const STAGES = ['seed', 'sprout', 'leafy', 'flowering'];
+  const STAGE_NAMES = { tree: ['seed', 'sprout', 'sapling', 'thriving'], spike: ['seed', 'sprout', 'leafy', 'flowering'], bush: ['seed', 'sprout', 'leafy', 'flowering'] };
+  const stageName = (pl, st) => STAGE_NAMES[pl.kind][st];
+  const plantMap = (pl, st) => (st < 3 ? PLANT_STAGES[st] : PLANT_GROWN[pl.kind]);
   let gDay = 1;
-  let gStage = PLANTS.map(p => p.s);
+  let gStage = PLANTS.map(() => 3);
   function renderGarden() {
-    $('#garden-grid').innerHTML = PLANTS.map((p, i) => `
-      <button class="plot" data-plot="${i}" aria-label="Water the ${p.name}, now ${STAGES[gStage[i]]}">
-        <span class="plot-sky">${pixelSVG(PLANT_STAGES[gStage[i]], { ...PAL, f: p.f, y: '#f6c945' })}</span>
+    $('#garden-grid').innerHTML = PLANTS.map((pl, i) => `
+      <button class="plot" data-plot="${i}" aria-label="Water the ${pl.name}, now ${stageName(pl, gStage[i])}">
+        <span class="plot-sky">${pixelSVG(plantMap(pl, gStage[i]), { ...PAL, e: pl.e, E: pl.E, f: pl.f, y: '#f6c945' })}</span>
         <span class="plot-soil"></span>
-        <span class="plot-name">${p.name}</span>
-        <span class="plot-stage">${STAGES[gStage[i]]}</span>
+        <span class="plot-name">${pl.name}</span>
+        <span class="plot-latin">${pl.latin}</span>
+        <span class="plot-stage">${stageName(pl, gStage[i])}</span>
       </button>`).join('');
-    $('#garden-day').textContent = `Day ${gDay}`;
+    $('#garden-day').textContent = `Day ${gDay} · ${PLANTS.length} plants`;
   }
   $('#garden-grid').addEventListener('click', e => {
     const b = e.target.closest('.plot');
@@ -1725,11 +1741,12 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     b.dataset.busy = '1';
     b.insertAdjacentHTML('beforeend', '<span class="drops" aria-hidden="true"><i></i><i></i><i></i><i></i></span>');
     setTimeout(() => {
-      const p = PLANTS[i];
-      const GREW = ['', 'It sprouted.', 'It is leafy now.', 'It flowered!'];
+      const pl = PLANTS[i];
       let msg;
-      if (gStage[i] < 3) { gStage[i]++; msg = `Watered the ${p.name}. ${GREW[gStage[i]]}`; }
-      else msg = `Watered the ${p.name}. It is already flowering.`;
+      if (gStage[i] < 3) {
+        gStage[i]++;
+        msg = `Watered the ${pl.name}. It is ${stageName(pl, gStage[i]) === 'sprout' ? 'a sprout' : stageName(pl, gStage[i])} now.`;
+      } else msg = `Watered the ${pl.name}. It is ${stageName(pl, 3)} already.`;
       gDay++;
       renderGarden();
       $('#garden-status').textContent = msg;
@@ -1741,9 +1758,10 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     gDay = 1;
     gStage = PLANTS.map(() => 0);
     renderGarden();
-    $('#garden-status').textContent = 'Fresh seeds, day 1.';
+    $('#garden-status').textContent = 'Fresh seeds, day 1. Water them to grow the garden back.';
   });
   renderGarden();
+  $('#garden-status').textContent = 'Everything is grown. Press Start over to grow it from seed.';
 
   /* ---------- nets: a tiny batting game ---------- */
   const nets = { on: false, balls: 0, runs: 0, wkts: 0, ball: null, swing: 0, swung: false, wait: 0, raf: 0, last: 0 };
