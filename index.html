@@ -842,7 +842,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     { t: 'Brain2Speech-Net', v: 'arXiv 2026', d: 'Intelligible brain-to-speech synthesis from intracortical neural signals, generated directly from neural activity faster than real time and without a text-decoding step.', u: 'https://arxiv.org/abs/2609.04455',
       img: 'projects/brain2speech.webp', alt: 'Brain2Speech-Net pipeline diagram, from neural recording to generated speech waveform',
       cap: 'From a neural recording to a speech waveform: brain content and frame encoders, a deep-HMM aligner that finds phoneme segments, and a flow-based speech decoder. No text is decoded along the way.' },
-    { t: 'StyleInstructCaps', v: 'AACL 2026', d: 'The first benchmark for controllable speaking-style captioning in audio-language models: a 2.9k-hour corpus, six caption types per utterance and a human-validated LLM judge.', u: null },
+    { t: 'StyleInstructCaps', v: 'AACL 2026', d: 'The first benchmark for controllable speaking-style captioning in audio-language models: a 2.9k-hour corpus, six caption types per utterance and a human-validated LLM judge.', u: 'https://styleinstructcaps.github.io/', lt: 'Visit the website ↗' },
     { t: 'EmotionRankCLAP', v: 'Interspeech 2025', d: 'A contrastive language-audio model that aligns natural-language speaking-style captions with emotional speech using Rank-N-Contrast over valence and arousal, preserving the ordinal structure of emotion.', u: 'https://arxiv.org/abs/2505.23732',
       img: 'projects/emotionrankclap.webp', alt: 'EmotionRankCLAP diagram of speech and caption pairs ranked by valence and arousal',
       cap: '(a) A batch of speech and caption pairs with valence and arousal labels. (b) How Rank-N-Contrast builds the positive and negative pairs across the two modalities.' },
@@ -893,7 +893,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
       <header class="card-title"><h3>${p.t}</h3><span class="card-venue">${p.v}</span></header>
       <div class="card-main">
         ${p.img ? `<button class="card-fig" data-fig="${i}" aria-label="Enlarge the ${p.t} figure"><img src="${p.img}" alt="${p.alt}" loading="lazy"></button>` : '<div class="card-fig is-empty">Figure coming soon</div>'}
-        <div class="card-text"><p>${p.d}</p>${p.u ? link(p.u, 'Read the paper ↗', 'card-link') : '<span class="card-link muted">Website coming soon</span>'}</div>
+        <div class="card-text"><p>${p.d}</p>${p.u ? link(p.u, p.lt || 'Read the paper ↗', 'card-link') : '<span class="card-link muted">Website coming soon</span>'}</div>
       </div>
     </article>`).join('');
   $('#interests').innerHTML = INTERESTS.map(t => `<li><span class="folder">${pixelSVG(ICONS.folder)}</span><span>${t}</span></li>`).join('');
