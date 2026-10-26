@@ -185,6 +185,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 #win-beyond { width: min(640px, calc(100% - 150px)); height: min(620px, calc(100% - 64px)); }
 #win-cv { width: min(660px, calc(100% - 150px)); height: min(640px, calc(100% - 48px)); }
 #win-trash { width: min(460px, calc(100% - 150px)); }
+#win-news { width: min(580px, calc(100% - 150px)); }
 
 /* controls */
 .btn {
@@ -337,12 +338,31 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 .page h2 { font: 600 22px/1.2 var(--f-display); margin: 0; }
 .page-sub { margin: 2px 0 0; font-size: 14px; color: var(--ink-2); }
 .page h3 { font: 600 14px/1.4 var(--f-display); letter-spacing: 1.5px; text-transform: uppercase; border-bottom: 1px solid var(--ink); margin: 20px 0 10px; }
-.job { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; margin-bottom: 12px; }
+.job { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 0 12px; margin-bottom: 14px; }
+.job > .logo { grid-row: 1 / span 3; }
 .job-org { font-weight: 700; }
 .job-date { font: 13px/1.6 var(--f-display); color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.job-role { grid-column: 1 / -1; font-style: italic; font-size: 14px; }
-.job ul { grid-column: 1 / -1; margin: 3px 0 0; padding-left: 18px; font-size: 14px; }
+.job-role { grid-column: 2 / -1; font-style: italic; font-size: 14px; }
+.job ul { grid-column: 2 / -1; margin: 3px 0 0; padding-left: 18px; font-size: 14px; }
 .page-foot { margin: 20px 0 0; }
+
+/* logos */
+.logo { display: grid; place-items: center; width: 56px; height: 40px; flex: none; overflow: hidden; border: 1px solid var(--ink); background: var(--logo-bg, #ffffff); }
+.logo img { display: block; max-width: 86%; max-height: 80%; object-fit: contain; }
+.logos-cap { margin: 16px 0 6px; font: 500 13px var(--f-display); color: var(--ink-2); }
+.logos { display: flex; flex-wrap: wrap; gap: 6px; }
+.logos .logo { width: auto; min-width: 46px; height: 42px; padding: 0 6px; box-shadow: 2px 2px 0 var(--ink); }
+.logos .logo img { width: auto; height: 24px; max-width: none; max-height: none; }
+
+/* news */
+.news-list { list-style: none; margin: 0; padding: 0; }
+.news-item { display: grid; grid-template-columns: 32px 72px minmax(0, 1fr); gap: 2px 12px; align-items: start; padding: 12px 0; border-bottom: 1px dotted var(--rule); }
+.news-item:first-child { padding-top: 0; }
+.news-item:last-child { border-bottom: 0; }
+.news-icon { width: 32px; height: 32px; }
+.news-date { font: 600 14px/1.7 var(--f-display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.news-text { margin: 0; max-width: 60ch; }
+.news-text a { font: 500 13px var(--f-display); white-space: nowrap; }
 
 /* trash */
 .table-wrap { overflow-x: auto; }
@@ -390,7 +410,9 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   .win-zoom { display: none; }
   .tiles { grid-template-columns: minmax(0, 1fr); }
   .garden-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .job { grid-template-columns: minmax(0, 1fr); }
+  .job { grid-template-columns: 56px minmax(0, 1fr); }
+  .news-item { grid-template-columns: 32px minmax(0, 1fr); }
+  .news-item .news-text { grid-column: 2; }
   .page { padding: 16px; }
   .cv-body { padding: 10px; }
   .desktop { background-image: url("wallpaper-small.jpg"); background-position: 58% 70%; }
@@ -415,6 +437,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
       <div class="menu-drop" role="menu" hidden>
         <button role="menuitem" data-action="open:about">About Shreeram…</button>
         <hr>
+        <button role="menuitem" data-action="open:news">News.app</button>
         <button role="menuitem" data-action="open:research">Research.app</button>
         <button role="menuitem" data-action="open:reflections">Reflections.html</button>
         <button role="menuitem" data-action="open:music">Currently Listening.mp3</button>
@@ -469,6 +492,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 <main class="desktop" id="desk">
   <div class="icons" id="icons">
     <button class="icon" data-open="about"><span class="icon-img" data-icon="about"></span><span class="icon-label">About Me</span></button>
+    <button class="icon" data-open="news"><span class="icon-img" data-icon="news"></span><span class="icon-label">News<wbr>.app</span></button>
     <button class="icon" data-open="research"><span class="icon-img" data-icon="research"></span><span class="icon-label">Research<wbr>.app</span></button>
     <button class="icon" data-open="reflections"><span class="icon-img" data-icon="browser"></span><span class="icon-label">Reflections<wbr>.html</span></button>
     <button class="icon" data-open="music"><span class="icon-img" data-icon="music"></span><span class="icon-label">Currently Listening<wbr>.mp3</span></button>
@@ -513,6 +537,16 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
         <div class="mem-bar" id="mem-bar"></div>
         <div class="mem-legend" id="mem-legend"></div>
       </figure>
+      <p class="logos-cap">Where I've studied and worked</p>
+      <div class="logos">
+        <span class="logo" style="--logo-bg:#000000" title="UT Dallas"><img src="logos/utd.png" alt="UT Dallas logo" loading="lazy"></span>
+        <span class="logo" style="--logo-bg:#1e386b" title="Johns Hopkins University"><img src="logos/jhu.png" alt="Johns Hopkins University logo" loading="lazy"></span>
+        <span class="logo" style="--logo-bg:#ffffff" title="Apple"><img src="logos/apple.png" alt="Apple logo" loading="lazy"></span>
+        <span class="logo" style="--logo-bg:#ffffff" title="Otter.ai"><img src="logos/otter.png" alt="Otter.ai logo" loading="lazy"></span>
+        <span class="logo" style="--logo-bg:#00c6fc" title="Intel"><img src="logos/intel.png" alt="Intel logo" loading="lazy"></span>
+        <span class="logo" style="--logo-bg:#ffffff" title="Indian Institute of Science"><img src="logos/iisc.png" alt="Indian Institute of Science logo" loading="lazy"></span>
+        <span class="logo" style="--logo-bg:#000000" title="PES University"><img src="logos/pes.png" alt="PES University logo" loading="lazy"></span>
+      </div>
       <div class="chips">
         <a class="chip" href="https://scholar.google.com/citations?user=ocSWiUYAAAAJ&amp;hl=en&amp;oi=sra" target="_blank" rel="noopener">Google Scholar ↗</a>
         <a class="chip" href="https://github.com/Kodhandarama?tab=repositories" target="_blank" rel="noopener">GitHub ↗</a>
@@ -523,6 +557,36 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
       </div>
       <p class="email">Email <span id="email-text">shreeramsureshchandra@gmail.com</span><button class="btn btn-small" data-action="copy-email">Copy</button></p>
       <p class="hint-touch small">Close this window to see the desktop.</p>
+    </div>
+  </section>
+
+  <!-- News -->
+  <section class="win" id="win-news" data-win="news" data-app="News" role="dialog" aria-labelledby="t-news" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window"></button><h2 class="win-name" id="t-news">News.app</h2><button class="win-zoom" aria-label="Zoom window"></button></header>
+    <div class="win-info"><span>4 items · newest first</span><span>2026</span></div>
+    <div class="win-body">
+      <ol class="news-list">
+        <li class="news-item">
+          <span class="news-icon" data-icon="trophy"></span>
+          <time class="news-date" datetime="2026-09">Sep 2026</time>
+          <p class="news-text"><b>StyleInstructCaps</b> was accepted to <b>AACL 2026</b>. It is the first benchmark for controllable speaking-style captioning in audio-language models. <a href="https://styleinstructcaps.github.io/" target="_blank" rel="noopener">Website ↗</a></p>
+        </li>
+        <li class="news-item">
+          <span class="news-icon" data-icon="mic"></span>
+          <time class="news-date" datetime="2026-08">Aug 2026</time>
+          <p class="news-text">Presented at the <b>ISCA Doctoral Consortium</b> in Sydney, on natural language as the interface to speaking style. <a href="https://www.isca-archive.org/dc_2026/chandra26_dc.html" target="_blank" rel="noopener">Paper ↗</a></p>
+        </li>
+        <li class="news-item">
+          <span class="news-icon" data-icon="briefcase"></span>
+          <time class="news-date" datetime="2026-04">Apr 2026</time>
+          <p class="news-text">Heading to <b>Apple</b> for the summer as a Machine Learning Research Intern.</p>
+        </li>
+        <li class="news-item">
+          <span class="news-icon" data-icon="chalkboard"></span>
+          <time class="news-date" datetime="2026-03">Mar 2026</time>
+          <p class="news-text">Gave a guest lecture, “History of TTS: from classical approaches to current expressive speech generation”, in Prof. Berrak Sisman's speech processing course at <b>Johns Hopkins University</b>.</p>
+        </li>
+      </ol>
     </div>
   </section>
 
@@ -674,22 +738,22 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
         <h2>Shreeram Chandra</h2>
         <p class="page-sub">Expressive speech synthesis · speech and language · brain-to-speech</p>
         <h3>Education</h3>
-        <div class="job"><span class="job-org">The University of Texas at Dallas</span><span class="job-date">Aug 2022 – May 2027</span><span class="job-role">Ph.D., Computer Engineering · GPA 3.94/4.0</span></div>
-        <div class="job"><span class="job-org">Johns Hopkins University, CLSP</span><span class="job-date">Jan 2025 – May 2027</span><span class="job-role">Visiting researcher (the research group moved to Hopkins!)</span></div>
-        <div class="job"><span class="job-org">PES University, Bengaluru</span><span class="job-date">Jul 2017 – May 2021</span><span class="job-role">B.Tech., Electronics and Communication Engineering · CGPA 8.42/10</span></div>
+        <div class="job"><span class="logo" style="--logo-bg:#000000" title="UT Dallas"><img src="logos/utd.png" alt="UT Dallas logo" loading="lazy"></span><span class="job-org">The University of Texas at Dallas</span><span class="job-date">Aug 2022 – May 2027</span><span class="job-role">Ph.D., Computer Engineering · GPA 3.94/4.0</span></div>
+        <div class="job"><span class="logo" style="--logo-bg:#1e386b" title="Johns Hopkins University"><img src="logos/jhu.png" alt="Johns Hopkins University logo" loading="lazy"></span><span class="job-org">Johns Hopkins University, CLSP</span><span class="job-date">Jan 2025 – May 2027</span><span class="job-role">Visiting researcher (the research group moved to Hopkins!)</span></div>
+        <div class="job"><span class="logo" style="--logo-bg:#000000" title="PES University"><img src="logos/pes.png" alt="PES University logo" loading="lazy"></span><span class="job-org">PES University, Bengaluru</span><span class="job-date">Jul 2017 – May 2021</span><span class="job-role">B.Tech., Electronics and Communication Engineering · CGPA 8.42/10</span></div>
         <h3>Experience</h3>
-        <div class="job"><span class="job-org">Center for Language and Speech Processing, Johns Hopkins</span><span class="job-date">Jan 2025 – present</span><span class="job-role">Visiting Researcher</span></div>
-        <div class="job"><span class="job-org">Apple</span><span class="job-date">May – Aug 2026</span><span class="job-role">Machine Learning Research Intern</span>
+        <div class="job"><span class="logo" style="--logo-bg:#ffffff" title="CLSP, Johns Hopkins"><img src="logos/clsp.png" alt="CLSP, Johns Hopkins logo" loading="lazy"></span><span class="job-org">Center for Language and Speech Processing, Johns Hopkins</span><span class="job-date">Jan 2025 – present</span><span class="job-role">Visiting Researcher</span></div>
+        <div class="job"><span class="logo" style="--logo-bg:#ffffff" title="Apple"><img src="logos/apple.png" alt="Apple logo" loading="lazy"></span><span class="job-org">Apple</span><span class="job-date">May – Aug 2026</span><span class="job-role">Machine Learning Research Intern</span>
           <ul><li>Worked on making Apple Foundation Models better.</li><li>Post-training of audio-language models (ALMs), with a focus on data mixture selection.</li></ul></div>
-        <div class="job"><span class="job-org">Otter.ai</span><span class="job-date">Jun – Aug 2025</span><span class="job-role">Research Intern</span>
+        <div class="job"><span class="logo" style="--logo-bg:#ffffff" title="Otter.ai"><img src="logos/otter.png" alt="Otter.ai logo" loading="lazy"></span><span class="job-org">Otter.ai</span><span class="job-date">Jun – Aug 2025</span><span class="job-role">Research Intern</span>
           <ul><li>Built a speaking-style captioning model and a TTS evaluation framework.</li><li>Worked on StyleInstructCaps, a speaking-style captioning benchmark (AACL 2026).</li></ul></div>
-        <div class="job"><span class="job-org">Intel</span><span class="job-date">Jul 2021 – Jul 2022</span><span class="job-role">Graphics Hardware Engineer</span>
+        <div class="job"><span class="logo" style="--logo-bg:#00c6fc" title="Intel"><img src="logos/intel.png" alt="Intel logo" loading="lazy"></span><span class="job-org">Intel</span><span class="job-date">Jul 2021 – Jul 2022</span><span class="job-role">Graphics Hardware Engineer</span>
           <ul><li>Built a software model simulator mimicking GPU hardware behavior for pre-silicon validation.</li><li>Worked on the display pixel-processing pipeline and its image filters.</li></ul></div>
-        <div class="job"><span class="job-org">Indian Institute of Science, Speech and Audio Group</span><span class="job-date">Jan – Jul 2021</span><span class="job-role">Research Intern</span>
+        <div class="job"><span class="logo" style="--logo-bg:#ffffff" title="Indian Institute of Science"><img src="logos/iisc.png" alt="Indian Institute of Science logo" loading="lazy"></span><span class="job-org">Indian Institute of Science, Speech and Audio Group</span><span class="job-date">Jan – Jul 2021</span><span class="job-role">Research Intern</span>
           <ul><li>Designed DSP-based listening experiments to study the perceived source width of audio signals.</li><li>Synthesized vowels with LPC source-filter models and built loudspeaker compensation filters.</li></ul></div>
-        <div class="job"><span class="job-org">Intel</span><span class="job-date">May – Nov 2020</span><span class="job-role">Undergraduate Intern</span>
+        <div class="job"><span class="logo" style="--logo-bg:#00c6fc" title="Intel"><img src="logos/intel.png" alt="Intel logo" loading="lazy"></span><span class="job-org">Intel</span><span class="job-date">May – Nov 2020</span><span class="job-role">Undergraduate Intern</span>
           <ul><li>Built a test application interfacing components of the display GPU architecture.</li><li>Wrote a C++ parser to reproduce customer-reported bugs on test benches.</li></ul></div>
-        <div class="job"><span class="job-org">Microsoft Innovation Lab, PES University</span><span class="job-date">May – Aug 2019</span><span class="job-role">Research Project Intern</span>
+        <div class="job"><span class="logo" style="--logo-bg:#000000" title="Microsoft Innovation Lab, PES University"><img src="logos/msr-pesu.png" alt="Microsoft Innovation Lab, PES University logo" loading="lazy"></span><span class="job-org">Microsoft Innovation Lab, PES University</span><span class="job-date">May – Aug 2019</span><span class="job-role">Research Project Intern</span>
           <ul><li>Worked on Mythodex, a context-based mythological scene mapping model.</li><li>Used neural networks, graphs and object detectors (YOLO, SSD, Faster R-CNN).</li></ul></div>
         <p class="page-foot"><a class="btn btn-default" style="display:inline-block;text-decoration:none;color:var(--ink)" href="https://drive.google.com/file/d/1Qi8mfPiA0OhapTXiwKWckOHk8TOT19PJ/view?usp=sharing" target="_blank" rel="noopener">Open the full CV ↗</a></p>
       </article>
@@ -742,7 +806,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   const EMAIL = 'shreeramsureshchandra@gmail.com';
 
   /* ---------- pixel icons: 16x16 maps, one character per pixel ---------- */
-  const PAL = { k: '#17171c', w: '#ffffff', c: '#eadfc4', g: '#a9a39a', G: '#5f5a55', m: '#a6efc8', b: '#2f5fd0', y: '#f6e27f', r: '#d1462f', n: '#c0673d', N: '#7a4a2a', e: '#58a84f', E: '#2f6b32', F: '#b9c4f0' };
+  const PAL = { k: '#17171c', w: '#ffffff', c: '#eadfc4', g: '#a9a39a', G: '#5f5a55', m: '#a6efc8', b: '#2f5fd0', y: '#f6e27f', r: '#d1462f', n: '#c0673d', N: '#7a4a2a', e: '#58a84f', E: '#2f6b32', F: '#b9c4f0', o: '#f2b632' };
   const ICONS = {
     about: [
       '................', '..kkkkkkkkkkkk..', '..kcccccccccck..', '..kckkkkkkkkck..',
@@ -755,6 +819,36 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
       '..kwwwwwwwkwwk..', '..kwwwwwwwkkkk..', '..kwwwwbwwwwwk..', '..kwwbwbbwbwwk..',
       '..kwbbbbbbbbwk..', '..kbbbbbbbbbbk..', '..kwbbbbbbbbwk..', '..kwwbwbbwbwwk..',
       '..kwwwwbwwwwwk..', '..kwwwwwwwwwwk..', '..kkkkkkkkkkkk..', '................'
+    ],
+    news: [
+      '................', '.kkkkkkkkkkkkkk.', '.kwwwwwwwwwwwwk.', '.kwkkkkkkkkkkwk.',
+      '.kwkkkkkkkkkkwk.', '.kwwwwwwwwwwwwk.', '.kwbbbbwGGGGGwk.', '.kwbbbbwwwwwwwk.',
+      '.kwbbbbwGGGGGwk.', '.kwbbbbwwwwwwwk.', '.kwwwwwwwwwwwwk.', '.kwGGGGGGGGGGwk.',
+      '.kwwwwwwwwwwwwk.', '.kwGGGGGGGwwwwk.', '.kkkkkkkkkkkkkk.', '................'
+    ],
+    trophy: [
+      '................', '...kkkkkkkkkk...', '.kkkooooooookkk.', '.k.kooooooook.k.',
+      '.k.kooooooook.k.', '..kkoowoooookk..', '....kooooook....', '.....kooook.....',
+      '......kook......', '.......kk.......', '......kook......', '......kook......',
+      '.....kkkkkk.....', '....kooooook....', '....kkkkkkkk....', '................'
+    ],
+    mic: [
+      '................', '......kkkk......', '.....kGGGGk.....', '.....kGwGGk.....',
+      '.....kGGGGk.....', '.....kGwGGk.....', '.....kGGGGk.....', '...k.kGGGGk.k...',
+      '...k..kkkk..k...', '....k......k....', '.....kkkkkk.....', '.......kk.......',
+      '.......kk.......', '.....kkkkkk.....', '................', '................'
+    ],
+    briefcase: [
+      '................', '................', '......kkkk......', '.....k....k.....',
+      '.kkkkkkkkkkkkkk.', '.kNNNNNNNNNNNNk.', '.kNNNNNNNNNNNNk.', '.kNNNNNNNNNNNNk.',
+      '.kkkkkkookkkkkk.', '.kNNNNNooNNNNNk.', '.kNNNNNNNNNNNNk.', '.kNNNNNNNNNNNNk.',
+      '.kkkkkkkkkkkkkk.', '................', '................', '................'
+    ],
+    chalkboard: [
+      '................', '.nnnnnnnnnnnnnn.', '.nEEEEEEEEEEEEn.', '.nEwwEEEEEEEEEn.',
+      '.nEEEEwwwEEEEEn.', '.nEEEEEEEEwwEEn.', '.nEwwwEEEEEEEEn.', '.nEEEEEEEwwwEEn.',
+      '.nEEEEEEEEEEEEn.', '.nnnnnnnnnnnnnn.', '...n........n...', '...n........n...',
+      '..n..........n..', '................', '................', '................'
     ],
     browser: [
       '................', '.kkkkkkkkkkkkkk.', '.kGGGGGGGGGGGGk.', '.kkkkkkkkkkkkkk.',
@@ -949,7 +1043,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   /* ---------- windows ---------- */
   const wins = $$('.win');
   const winById = Object.fromEntries(wins.map(w => [w.dataset.win, w]));
-  const DEFAULTS = { about: [.05, 18], research: [.24, 40], reflections: [.28, 36], figure: [.1, 24], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
+  const DEFAULTS = { about: [.05, 18], news: [.34, 56], research: [.24, 40], reflections: [.28, 36], figure: [.1, 24], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
   const openers = {};
   let zTop = 10;
 
