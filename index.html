@@ -787,9 +787,14 @@ html.mode-scroll #win-figure {
   <!-- News -->
   <section class="win" id="win-news" data-win="news" data-app="News" role="dialog" aria-labelledby="t-news" tabindex="-1" hidden>
     <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-news">News.app</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
-    <div class="win-info"><span>4 items · newest first</span><span>2026</span></div>
+    <div class="win-info"><span>7 items · newest first</span><span>2025–2026</span></div>
     <div class="win-body">
       <ol class="news-list">
+        <li class="news-item" data-until="2026-10-30">
+          <span class="news-icon" data-icon="calendar"></span>
+          <time class="news-date" datetime="2026-10-30">Oct 2026</time>
+          <p class="news-text"><span class="new news-badge">Upcoming</span> <span data-tense="future">Presenting</span><span data-tense="past" hidden>Presented</span> <b>StyleInstructCaps</b> at <b>SANE 2026</b> (Speech and Audio in the Northeast) at MIT in Cambridge, MA, on October 30. <a href="https://www.saneworkshop.org/sane2026/" target="_blank" rel="noopener">Workshop ↗</a></p>
+        </li>
         <li class="news-item">
           <span class="news-icon" data-icon="trophy"></span>
           <time class="news-date" datetime="2026-09">Sep 2026</time>
@@ -809,6 +814,16 @@ html.mode-scroll #win-figure {
           <span class="news-icon" data-icon="chalkboard"></span>
           <time class="news-date" datetime="2026-03">Mar 2026</time>
           <p class="news-text">Gave a guest lecture, “History of TTS: from classical approaches to current expressive speech generation”, in Prof. Berrak Sisman's speech processing course at <b>Johns Hopkins University</b>.</p>
+        </li>
+        <li class="news-item">
+          <span class="news-icon" data-icon="trophy"></span>
+          <time class="news-date" datetime="2025-07">Jul 2025</time>
+          <p class="news-text"><b>EmotionRankCLAP</b> was accepted at <b>Interspeech 2025</b>. <a href="https://arxiv.org/abs/2505.23732" target="_blank" rel="noopener">Paper ↗</a></p>
+        </li>
+        <li class="news-item">
+          <span class="news-icon" data-icon="briefcase"></span>
+          <time class="news-date" datetime="2025-06">Jun 2025</time>
+          <p class="news-text">Spent the summer at <b>Otter.ai</b> as a Research Intern, building a speaking-style captioning model and a TTS evaluation framework.</p>
         </li>
       </ol>
     </div>
@@ -1055,6 +1070,12 @@ html.mode-scroll #win-figure {
       '.kwbbbbwGGGGGwk.', '.kwbbbbwwwwwwwk.', '.kwwwwwwwwwwwwk.', '.kwGGGGGGGGGGwk.',
       '.kwwwwwwwwwwwwk.', '.kwGGGGGGGwwwwk.', '.kkkkkkkkkkkkkk.', '................'
     ],
+    calendar: [
+      '................', '....kk....kk....', '.kkkkkkkkkkkkkk.', '.krrrrrrrrrrrrk.',
+      '.krrrrrrrrrrrrk.', '.kkkkkkkkkkkkkk.', '.kwwwwwwwwwwwwk.', '.kwGwGwGwGwGwwk.',
+      '.kwwwwwwwwwwwwk.', '.kwGwGwGwbbbwwk.', '.kwwwwwwwbbbwwk.', '.kwGwGwGwbbbwwk.',
+      '.kwwwwwwwwwwwwk.', '.kkkkkkkkkkkkkk.', '................', '................'
+    ],
     trophy: [
       '................', '...kkkkkkkkkk...', '.kkkooooooookkk.', '.k.kooooooook.k.',
       '.k.kooooooook.k.', '..kkoowoooookk..', '....kooooook....', '.....kooook.....',
@@ -1159,6 +1180,12 @@ html.mode-scroll #win-figure {
     return `<svg viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${rects}</svg>`;
   }
   $$('[data-icon]').forEach(el => { const m = ICONS[el.dataset.icon]; if (m) el.innerHTML = pixelSVG(m); });
+  // An upcoming news item switches to past tense once its date has passed.
+  $$('[data-until]').forEach(li => {
+    const past = Date.now() > new Date(li.dataset.until + 'T23:59:59').getTime();
+    $$('[data-tense="future"], .news-badge', li).forEach(el => { el.hidden = past; });
+    $$('[data-tense="past"]', li).forEach(el => { el.hidden = !past; });
+  });
   $('#m-news').innerHTML = $$('#win-news .news-item').slice(0, 2).map(li => li.outerHTML).join('');
 
   /* ---------- content ---------- */
