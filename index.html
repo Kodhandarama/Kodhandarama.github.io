@@ -514,6 +514,18 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition: none !important; }
 }
 
+/* ---------- research statement ---------- */
+.statement { max-width: 68ch; }
+.statement p { margin: 0 0 16px; line-height: 1.65; }
+.statement-lede { font-size: 1.12em; }
+.link-btn { padding: 0; border: 0; background: none; color: var(--link); font: 500 16px var(--f-display); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.link-btn:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
+.about-more { margin: -4px 0 14px; }
+@media (max-width: 700px) {
+  .seg { display: flex; width: 100%; }
+  .seg button { flex: 1 1 auto; padding: 9px 6px; font-size: 13px; }
+}
+
 /* ---------- the version switch ---------- */
 .mode-switch { display: inline-flex; align-items: center; gap: 8px; padding: 0 4px; border: 0; background: none; color: inherit; font: inherit; white-space: nowrap; cursor: pointer; }
 .mode-switch-track { position: relative; flex: none; width: 38px; height: 20px; border: 1px solid var(--ink); background: var(--paper); }
@@ -550,7 +562,7 @@ html.mode-scroll .s-hero { display: block; order: 0; margin: 0; }
 .s-hero figcaption { margin-top: 8px; color: var(--ink-2); font: 15px var(--f-display); }
 html.mode-scroll .s-only { display: block; }
 .s-sub { margin: 28px 0 14px; font: 600 22px/1.3 var(--f-display); }
-html.mode-scroll #panel-projects .s-sub { margin-top: 0; }
+html.mode-scroll #panel-overview .s-sub { margin-top: 0; }
 html.mode-scroll .win:not(#win-figure):not(#win-trash) {
   position: static !important; display: flex !important; left: auto !important; top: auto !important;
   width: auto !important; height: auto !important; max-height: none !important; min-width: 0; min-height: 0;
@@ -688,7 +700,7 @@ html.mode-scroll #win-figure {
           <p class="m-role">Ph.D. student, UT Dallas<br>Visiting researcher, CLSP, Johns Hopkins</p>
         </div>
       </div>
-      <p class="m-bio">My research builds generative deep learning models that improve speaker and emotion controllability in expressive speech synthesis.</p>
+      <p class="m-bio">I work on expressive and controllable speech synthesis, and on extending it toward assistive communication such as brain-to-speech interfaces.</p>
       <div class="m-links">
         <button class="btn" data-action="open:about">About me</button>
         <button class="btn" data-action="open:cv">CV</button>
@@ -737,7 +749,8 @@ html.mode-scroll #win-figure {
           <p class="about-role">Ph.D. student, Computer Engineering, UT Dallas<br>Visiting researcher, CLSP, Johns Hopkins University</p>
         </div>
       </div>
-      <p>I am a fourth-year Ph.D. student at UT Dallas, advised by Prof. Berrak Sisman, and currently a visiting researcher at the Center for Language and Speech Processing (CLSP) at Johns Hopkins University. My research builds generative deep learning models that improve speaker and emotion controllability in expressive speech synthesis. I'm broadly interested in multimodal speech and language problems.</p>
+      <p>I am a fourth-year Ph.D. student at UT Dallas, advised by Prof. Berrak Sisman, and currently a visiting researcher at the Center for Language and Speech Processing (CLSP) at Johns Hopkins University. I work on speech and language technologies, with a particular focus on expressive and controllable speech synthesis: controlling emotion, style and speaker identity through natural language or other weak supervision, without relying on expensive labels or rigid control signals. More recently, I have been extending these ideas toward assistive communication, especially low-latency, intelligible brain-to-speech synthesis.</p>
+      <p class="about-more"><button class="link-btn" data-action="research-statement">Read my full research statement ›</button></p>
       <dl class="sysinfo">
         <dt>Version</dt><dd>Ph.D., year 4</dd>
         <dt>Advisor</dt><dd>Prof. Berrak Sisman</dd>
@@ -806,7 +819,8 @@ html.mode-scroll #win-figure {
     <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-research">Research.app</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
     <div class="win-toolbar">
       <div class="seg" role="tablist" aria-label="Research views">
-        <button role="tab" id="tab-projects" aria-controls="panel-projects" aria-selected="true">Projects</button>
+        <button role="tab" id="tab-overview" aria-controls="panel-overview" aria-selected="true">Overview</button>
+        <button role="tab" id="tab-projects" aria-controls="panel-projects" aria-selected="false">Projects</button>
         <button role="tab" id="tab-pubs" aria-controls="panel-pubs" aria-selected="false">Publications</button>
         <button role="tab" id="tab-interests" aria-controls="panel-interests" aria-selected="false">Interests</button>
       </div>
@@ -814,7 +828,16 @@ html.mode-scroll #win-figure {
     </div>
     <div class="win-info"><span id="research-count"></span><a href="https://scholar.google.com/citations?user=ocSWiUYAAAAJ&amp;hl=en&amp;oi=sra" target="_blank" rel="noopener">Google Scholar ↗</a></div>
     <div class="win-body research-body">
-      <div id="panel-projects" role="tabpanel" aria-labelledby="tab-projects"><h3 class="s-only s-sub">Projects</h3><div class="cards" id="cards"></div></div>
+      <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
+        <h3 class="s-only s-sub">Research statement</h3>
+        <div class="statement">
+          <p class="statement-lede">I am a PhD student working on speech and language technologies, with a particular focus on expressive and controllable speech synthesis. My broader goal is to build models that make speech generation more natural, flexible, and human-centered, while also extending these ideas toward assistive communication systems such as brain-to-speech interfaces.</p>
+          <p>I am broadly interested in speaking style, emotion, and expressivity in speech generation. A core problem driving my research is how to control nuanced aspects of speech—such as emotion, style, and speaker identity—using natural language or other weak forms of supervision, without relying heavily on expensive labels or rigid control signals.</p>
+          <p>At a foundational level, I am interested in building scalable learning frameworks that connect speech, language, and affect. My work has explored emotional text-to-speech without emotion labels, retrieval-based and contrastive methods for linking natural language to speaking style, and evaluation frameworks for controllable and instruction-guided speech synthesis. I am also interested in robust speech generation under limited or imperfect data settings, including multimodal and weakly supervised approaches.</p>
+          <p>More recently, I have been extending these ideas toward assistive communication, especially low-latency and intelligible brain-to-speech synthesis. This direction reflects my broader research vision: moving from expressive synthesis toward communication technologies that are both scientifically grounded and practically meaningful.</p>
+        </div>
+      </div>
+      <div id="panel-projects" role="tabpanel" aria-labelledby="tab-projects" hidden><h3 class="s-only s-sub">Projects</h3><div class="cards" id="cards"></div></div>
       <div id="panel-pubs" role="tabpanel" aria-labelledby="tab-pubs" hidden><h3 class="s-only s-sub">Publications</h3><div id="pub-list"></div></div>
       <div id="panel-interests" role="tabpanel" aria-labelledby="tab-interests" hidden><h3 class="s-only s-sub">Research interests</h3><ul class="interests" id="interests"></ul></div>
     </div>
@@ -1220,7 +1243,8 @@ html.mode-scroll #win-figure {
     $('#first-wrap').hidden = tab !== 'tab-pubs';
     $('#research-count').textContent = tab === 'tab-pubs'
       ? `${pubShown} items${$('#first-only').checked ? ' as first author' : ''} · 2020–2026`
-      : tab === 'tab-interests' ? `${INTERESTS.length} research interests` : `${PROJECTS.length} projects · newest first`;
+      : tab === 'tab-interests' ? `${INTERESTS.length} research interests`
+      : tab === 'tab-overview' ? 'Research statement' : `${PROJECTS.length} projects · newest first`;
   }
   $('#first-only').addEventListener('change', renderPubs);
   $$('[role="tab"]').forEach(tab => tab.addEventListener('click', () => {
@@ -1515,6 +1539,7 @@ html.mode-scroll #win-figure {
     else if (cmd === 'empty-trash') { $('#alert').hidden = false; $('#alert-ok').focus(); }
     else if (cmd === 'restart') restart();
     else if (cmd === 'view-scroll') setMode(true, true);
+    else if (cmd === 'research-statement') { $('#tab-overview').click(); openWin('research', src); }
   }
   $('#alert-ok').addEventListener('click', () => { $('#alert').hidden = true; });
 
