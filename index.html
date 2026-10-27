@@ -513,9 +513,105 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition: none !important; }
 }
+
+/* ---------- the version switch ---------- */
+.mode-switch { display: inline-flex; align-items: center; gap: 8px; padding: 0 4px; border: 0; background: none; color: inherit; font: inherit; white-space: nowrap; cursor: pointer; }
+.mode-switch-track { position: relative; flex: none; width: 38px; height: 20px; border: 1px solid var(--ink); background: var(--paper); }
+.mode-switch-knob { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: var(--ink); transition: left .15s; }
+.mode-switch[aria-checked="true"] .mode-switch-track { background: var(--ink); }
+.mode-switch[aria-checked="true"] .mode-switch-knob { left: 20px; background: var(--paper); }
+.s-bar, .s-hero, .s-only, .m-mode { display: none; }
+@media (max-width: 700px) {
+  .m-mode { display: block; justify-self: end; padding: 6px 10px; background: var(--paper); border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font: 500 16px var(--f-display); }
+}
+
+/* ---------- scrollable version: one ordinary page, apps become sections ---------- */
+html.mode-scroll, html.mode-scroll body { height: auto; overflow: visible; }
+html.mode-scroll body { display: block; background: var(--paper); }
+html.mode-scroll .menubar, html.mode-scroll .icons, html.mode-scroll .icon.trash, html.mode-scroll #sticky,
+html.mode-scroll #hike-note, html.mode-scroll .m-home, html.mode-scroll #win-trash, html.mode-scroll .win-toolbar,
+html.mode-scroll .win-info { display: none !important; }
+html.mode-scroll .s-bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 100; display: flex; align-items: center; gap: 22px;
+  padding: 12px max(20px, env(safe-area-inset-right, 0px)) 12px max(20px, env(safe-area-inset-left, 0px));
+  background: var(--paper); border-bottom: 1px solid var(--ink); font: 500 17px var(--f-display);
+}
+.s-name { color: var(--ink); font-size: 21px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.s-nav { display: flex; flex: 1; gap: 18px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.s-nav a { padding: 4px 0; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.s-nav a:hover { background: var(--ink); color: var(--paper); }
+html.mode-scroll .desktop {
+  position: static; z-index: auto; display: flex; flex-direction: column; gap: 64px; overflow: visible;
+  max-width: 900px; margin: 0 auto; padding-block: 28px 96px; background: none;
+}
+html.mode-scroll .desktop::before, html.mode-scroll .desktop::after { display: none; }
+html.mode-scroll .s-hero { display: block; order: 0; margin: 0; }
+.s-hero img { display: block; width: 100%; height: 240px; object-fit: cover; object-position: 50% 62%; border: 1px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.s-hero figcaption { margin-top: 8px; color: var(--ink-2); font: 15px var(--f-display); }
+html.mode-scroll .s-only { display: block; }
+.s-sub { margin: 28px 0 14px; font: 600 22px/1.3 var(--f-display); }
+html.mode-scroll #panel-projects .s-sub { margin-top: 0; }
+html.mode-scroll .win:not(#win-figure):not(#win-trash) {
+  position: static !important; display: flex !important; left: auto !important; top: auto !important;
+  width: auto !important; height: auto !important; max-height: none !important; min-width: 0; min-height: 0;
+  z-index: auto !important; visibility: visible !important; animation: none !important;
+  padding: 0; resize: none; overflow: visible; border: 0; box-shadow: none; background: none; scroll-margin-top: 90px;
+}
+html.mode-scroll .win:not(#win-figure) .win-title {
+  height: auto; justify-content: flex-start; margin-bottom: 20px; padding: 0 0 10px;
+  background: none; border-bottom: 3px double var(--ink); cursor: auto; touch-action: auto;
+}
+html.mode-scroll .win:not(#win-figure) .win-title::before,
+html.mode-scroll .win:not(#win-figure) .win-close,
+html.mode-scroll .win:not(#win-figure) .win-zoom { display: none; }
+html.mode-scroll .win:not(#win-figure) .win-name { max-width: none; padding: 0; background: none; color: var(--ink); font: 600 32px/1.2 var(--f-display); text-align: left; }
+html.mode-scroll .win:not(#win-figure) .win-body { flex: none; overflow: visible; padding: 0; }
+html.mode-scroll #win-research [role="tabpanel"] { display: block !important; }
+html.mode-scroll #win-reflections .browser-bar { border: 1px solid var(--ink); border-bottom-width: 1px; }
+html.mode-scroll #win-reflections .win-body.web { padding: 24px 28px 32px; border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); }
+html.mode-scroll #win-reflections .status-bar { border: 1px solid var(--ink); }
+html.mode-scroll #win-cv .win-body.cv-body { padding: 18px; }
+html.mode-scroll #win-about { order: 1; }
+html.mode-scroll #win-news { order: 2; }
+html.mode-scroll #win-research { order: 3; }
+html.mode-scroll #win-reflections { order: 4; }
+html.mode-scroll #win-cv { order: 5; }
+html.mode-scroll #win-music { order: 6; }
+html.mode-scroll #win-garden { order: 7; }
+html.mode-scroll #win-beyond { order: 8; }
+html.mode-scroll #win-figure {
+  position: fixed !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%);
+  width: min(1000px, calc(100vw - 32px)) !important; height: auto !important; max-height: calc(100vh - 48px) !important;
+  z-index: 2000 !important; animation: none !important;
+}
+@media (max-width: 700px) {
+  html.mode-scroll .s-bar { flex-wrap: wrap; gap: 8px 12px; }
+  html.mode-scroll .s-bar .mode-switch { margin-left: auto; font-size: 15px; }
+  .s-nav { order: 3; flex-basis: 100%; }
+  html.mode-scroll .desktop { gap: 48px; padding-block: 18px 72px; }
+  html.mode-scroll .win:not(#win-figure):not(#win-trash) { scroll-margin-top: 150px; }
+  .s-hero img { height: 170px; }
+  html.mode-scroll .win:not(#win-figure) .win-name { font-size: 26px; }
+  html.mode-scroll #win-reflections .win-body.web { padding: 18px 16px 24px; }
+}
 </style>
 </head>
 <body>
+<script>
+  // Pick the version before anything paints: ?view=scroll wins, then the visitor's last choice.
+  (function () {
+    var v = new URLSearchParams(location.search).get('view');
+    if (!v) { try { v = localStorage.getItem('shreeram-site-view'); } catch (err) { v = null; } }
+    if (v === 'scroll') document.documentElement.classList.add('mode-scroll');
+  })();
+</script>
+<header class="s-bar">
+  <a class="s-name" href="#win-about">Shreeram Chandra</a>
+  <nav class="s-nav" aria-label="Sections">
+    <a href="#win-news">News</a><a href="#win-research">Research</a><a href="#win-reflections">Reflections</a><a href="#win-cv">CV</a><a href="#win-music">Listening</a><a href="#win-garden">Garden</a><a href="#win-beyond">Beyond work</a>
+  </nav>
+  <button type="button" class="mode-switch" role="switch" aria-checked="false"><span>Scrollable version</span><span class="mode-switch-track" aria-hidden="true"><span class="mode-switch-knob"></span></span></button>
+</header>
 <nav class="menubar" aria-label="Menu bar">
   <div class="menus">
     <div class="menu">
@@ -555,6 +651,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
       <button class="menu-title" aria-haspopup="true" aria-expanded="false">View</button>
       <div class="menu-drop" role="menu" hidden>
         <button role="menuitem" disabled>✓ by Icon</button>
+        <button role="menuitem" data-action="view-scroll">Scrollable version</button>
         <button role="menuitem" data-action="clean-up">Clean Up Desktop</button>
       </div>
     </div>
@@ -570,13 +667,19 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   </div>
   <div class="menubar-right">
     <span class="toast" id="toast" role="status" hidden></span>
+    <button type="button" class="mode-switch" role="switch" aria-checked="false"><span>Scrollable version</span><span class="mode-switch-track" aria-hidden="true"><span class="mode-switch-knob"></span></span></button>
     <span id="front-app">Finder</span>
     <time id="clock"></time>
   </div>
 </nav>
 
 <main class="desktop" id="desk">
+  <figure class="s-hero">
+    <img src="wallpaper.jpg" alt="Autumn view over the valley from a ridge in Shenandoah National Park" loading="lazy">
+    <figcaption>From my latest hike in Shenandoah National Park.</figcaption>
+  </figure>
   <section class="m-home" aria-label="Home">
+    <div class="m-mode"><button type="button" class="mode-switch" role="switch" aria-checked="false"><span>Scrollable version</span><span class="mode-switch-track" aria-hidden="true"><span class="mode-switch-knob"></span></span></button></div>
     <div class="m-card">
       <div class="m-hero-top">
         <img class="m-photo" src="photo.jpg" alt="Shreeram Chandra" width="84" height="84">
@@ -614,6 +717,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     <div class="sticky-grip" aria-hidden="true"></div>
     <p><b>Hi, I'm Shreeram.</b> I work on expressive speech synthesis.</p>
     <p class="desk-hint">Double-click an icon to open it. Drag windows by their striped title bars, and close them with the × box.</p>
+    <p class="desk-hint">Prefer a regular website? Turn on <b>Scrollable version</b> at the top right.</p>
     <p class="touch-hint">Tap an icon to open it.</p>
   </aside>
   <aside class="sticky photo-note" id="hike-note">
@@ -710,9 +814,9 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     </div>
     <div class="win-info"><span id="research-count"></span><a href="https://scholar.google.com/citations?user=ocSWiUYAAAAJ&amp;hl=en&amp;oi=sra" target="_blank" rel="noopener">Google Scholar ↗</a></div>
     <div class="win-body research-body">
-      <div id="panel-projects" role="tabpanel" aria-labelledby="tab-projects"><div class="cards" id="cards"></div></div>
-      <div id="panel-pubs" role="tabpanel" aria-labelledby="tab-pubs" hidden><div id="pub-list"></div></div>
-      <div id="panel-interests" role="tabpanel" aria-labelledby="tab-interests" hidden><ul class="interests" id="interests"></ul></div>
+      <div id="panel-projects" role="tabpanel" aria-labelledby="tab-projects"><h3 class="s-only s-sub">Projects</h3><div class="cards" id="cards"></div></div>
+      <div id="panel-pubs" role="tabpanel" aria-labelledby="tab-pubs" hidden><h3 class="s-only s-sub">Publications</h3><div id="pub-list"></div></div>
+      <div id="panel-interests" role="tabpanel" aria-labelledby="tab-interests" hidden><h3 class="s-only s-sub">Research interests</h3><ul class="interests" id="interests"></ul></div>
     </div>
   </section>
 
@@ -904,6 +1008,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const narrowMQ = matchMedia('(max-width: 700px)');
   const narrow = () => narrowMQ.matches;
+  const scrollMode = () => document.documentElement.classList.contains('mode-scroll');
   const EMAIL = 'shreeramsureshchandra@gmail.com';
 
   /* ---------- pixel icons: 16x16 maps, one character per pixel ---------- */
@@ -1152,7 +1257,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   let zTop = 10;
 
   function placeWin(w) {
-    if (w.dataset.placed || narrow()) return;
+    if (w.dataset.placed || narrow() || scrollMode()) return;
     const [fx, fy] = DEFAULTS[w.dataset.win] || [.2, 40];
     const dw = desk.clientWidth, dh = desk.clientHeight;
     // Keep new windows clear of the icon columns on the right.
@@ -1204,6 +1309,12 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   function openWin(id, from) {
     const w = winById[id];
     if (!w) return;
+    if (scrollMode() && id !== 'figure') {
+      // Scrollable version: every app is a section of the page, so "opening" one scrolls to it.
+      w.hidden = false;
+      w.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      return;
+    }
     if (!w.hidden) { front(w); w.focus({ preventScroll: true }); return; }
     const fromRect = isShown(from) ? from.getBoundingClientRect() : null;
     w.hidden = false;
@@ -1251,7 +1362,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 
   function draggable(el, handle, onStart) {
     handle.addEventListener('pointerdown', e => {
-      if (e.button !== 0 || narrow()) return;
+      if (e.button !== 0 || narrow() || scrollMode()) return;
       const hit = e.target.closest('button, a, input, select, textarea');
       if (hit && hit !== handle) return;
       const sx = e.clientX, sy = e.clientY;
@@ -1403,6 +1514,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     else if (cmd === 'clean-up') cleanUp();
     else if (cmd === 'empty-trash') { $('#alert').hidden = false; $('#alert-ok').focus(); }
     else if (cmd === 'restart') restart();
+    else if (cmd === 'view-scroll') setMode(true, true);
   }
   $('#alert-ok').addEventListener('click', () => { $('#alert').hidden = true; });
 
@@ -1410,6 +1522,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
     if (e.key === 'Escape') {
       if (openMenu) closeMenus();
       else if (!$('#alert').hidden) $('#alert').hidden = true;
+      else if (scrollMode()) closeWin(winById.figure);
       else closeWin(topVisible());
     } else if (e.key === ' ' && nets.on && winById.beyond.classList.contains('is-front') && !e.target.closest('button, a, input')) {
       e.preventDefault();
@@ -1708,9 +1821,44 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   winById.beyond.addEventListener('winclose', stopNets);
   netsDraw();
 
+  /* ---------- desktop or scrollable version ---------- */
+  const VIEW_KEY = 'shreeram-site-view';
+  // Section headings in the scrollable version drop the app-style file names.
+  const PLAIN = { about: 'About', news: 'News', research: 'Research', reflections: 'Human-written reflections', cv: 'CV', music: 'Currently listening', garden: 'Garden', beyond: 'Beyond work' };
+  function syncModeUI() {
+    const on = scrollMode();
+    $$('.mode-switch').forEach(b => b.setAttribute('aria-checked', String(on)));
+    wins.forEach(w => {
+      const n = $('.win-name', w);
+      if (!PLAIN[w.dataset.win]) return;
+      if (!n.dataset.full) n.dataset.full = n.textContent;
+      n.textContent = on ? PLAIN[w.dataset.win] : n.dataset.full;
+    });
+  }
+  function setMode(scroll, remember) {
+    if (scroll === scrollMode()) return;
+    closeMenus();
+    document.documentElement.classList.toggle('mode-scroll', scroll);
+    syncModeUI();
+    if (remember) { try { localStorage.setItem(VIEW_KEY, scroll ? 'scroll' : 'desktop'); } catch (err) { /* storage is optional */ } }
+    const u = new URL(location.href);
+    if (scroll) u.searchParams.set('view', 'scroll'); else u.searchParams.delete('view');
+    history.replaceState(history.state, '', u);
+    if (scroll) {
+      closeWin(winById.figure, true);
+      window.scrollTo(0, 0);
+    } else {
+      wins.forEach(w => { if (!w.hidden) { placeWin(w); if (!w.style.zIndex) front(w); clampWin(w); } });
+      const t = topVisible();
+      if (t) front(t);
+    }
+  }
+  $$('.mode-switch').forEach(b => b.addEventListener('click', () => setMode(!scrollMode(), true)));
+
   /* ---------- restart, resize, first view ---------- */
   function initialState() {
     if (narrow()) return;
+    if (scrollMode()) { winById.news.hidden = false; winById.about.hidden = false; return; }
     openWin('news');
     openWin('about');
   }
@@ -1732,6 +1880,7 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
   });
 
   initialState();
+  syncModeUI();
   const [hashWin, hashSlug] = decodeURIComponent(location.hash.slice(1)).split('/');
   if (winById[hashWin]) {
     openWin(hashWin);
