@@ -252,6 +252,8 @@ a:hover { background: var(--ink); color: var(--paper); text-decoration: none; }
 .fig-body { background: #ffffff; }
 #fig-img { display: block; max-width: 100%; height: auto; margin: 0 auto; }
 #fig-cap { margin: 15px 0 0; }
+#fig-video { display: block; width: 100%; max-height: 72vh; background: #000000; }
+.card-media { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .card-link.muted { color: var(--muted); }
 .year { margin-bottom: 23px; }
 .year h3 { display: flex; justify-content: space-between; align-items: baseline; font: 600 23px/1.4 var(--f-display); margin: 0 0 5px; border-bottom: 1px solid var(--ink); }
@@ -787,9 +789,19 @@ html.mode-scroll #win-figure {
   <!-- News -->
   <section class="win" id="win-news" data-win="news" data-app="News" role="dialog" aria-labelledby="t-news" tabindex="-1" hidden>
     <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-news">News.app</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
-    <div class="win-info"><span>7 items · newest first</span><span>2025–2026</span></div>
+    <div class="win-info"><span>9 items · newest first</span><span>2025–2026</span></div>
     <div class="win-body">
       <ol class="news-list">
+        <li class="news-item" data-until="2026-11-13">
+          <span class="news-icon" data-icon="brain"></span>
+          <time class="news-date" datetime="2026-11-13">Nov 2026</time>
+          <p class="news-text"><span class="new news-badge">Upcoming</span> <span data-tense="future">Presenting</span><span data-tense="past" hidden>Presented</span> <b>Brain2Speech-Net</b> at the <b>IEEE Brain Discovery and Neurotechnology Workshop</b> in Washington, DC, on November 13. <a href="https://brain.ieee.org/event/2026-ieee-brain-discovery-and-neurotechnology-workshop/" target="_blank" rel="noopener">Workshop ↗</a></p>
+        </li>
+        <li class="news-item" data-until="2026-11-06">
+          <span class="news-icon" data-icon="calendar"></span>
+          <time class="news-date" datetime="2026-11-06">Nov 2026</time>
+          <p class="news-text"><span class="new news-badge">Upcoming</span> <span data-tense="future">Presenting</span><span data-tense="past" hidden>Presented</span> <b>StyleInstructCaps</b> at <b>AACL-IJCNLP 2026</b> (Hengqin, China) on November 6. <button class="link-btn" data-media="sic-talk">▶ Watch the talk</button> <button class="link-btn" data-media="sic-poster">See the poster</button></p>
+        </li>
         <li class="news-item" data-until="2026-10-30">
           <span class="news-icon" data-icon="calendar"></span>
           <time class="news-date" datetime="2026-10-30">Oct 2026</time>
@@ -903,7 +915,7 @@ html.mode-scroll #win-figure {
   <!-- Figure viewer -->
   <section class="win" id="win-figure" data-win="figure" data-app="Figure" role="dialog" aria-labelledby="t-figure" tabindex="-1" hidden>
     <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-figure">Figure</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
-    <div class="win-body fig-body"><img id="fig-img" alt=""><p id="fig-cap" class="small"></p></div>
+    <div class="win-body fig-body"><img id="fig-img" alt=""><video id="fig-video" controls preload="none" playsinline hidden></video><p id="fig-cap" class="small"></p></div>
   </section>
 
   <!-- Currently listening -->
@@ -1050,7 +1062,7 @@ html.mode-scroll #win-figure {
   const EMAIL = 'shreeramsureshchandra@gmail.com';
 
   /* ---------- pixel icons: 16x16 maps, one character per pixel ---------- */
-  const PAL = { k: '#17171c', w: '#ffffff', c: '#eadfc4', g: '#a9a39a', G: '#5f5a55', m: '#a6efc8', b: '#2f5fd0', y: '#f6e27f', r: '#d1462f', n: '#c0673d', N: '#7a4a2a', e: '#58a84f', E: '#2f6b32', F: '#b9c4f0', o: '#f2b632' };
+  const PAL = { k: '#17171c', w: '#ffffff', c: '#eadfc4', g: '#a9a39a', G: '#5f5a55', m: '#a6efc8', b: '#2f5fd0', y: '#f6e27f', r: '#d1462f', n: '#c0673d', N: '#7a4a2a', e: '#58a84f', E: '#2f6b32', F: '#b9c4f0', o: '#f2b632', p: '#f2a7b8', P: '#c96f86' };
   const ICONS = {
     about: [
       '................', '..kkkkkkkkkkkk..', '..kcccccccccck..', '..kckkkkkkkkck..',
@@ -1069,6 +1081,12 @@ html.mode-scroll #win-figure {
       '.kwkkkkkkkkkkwk.', '.kwwwwwwwwwwwwk.', '.kwbbbbwGGGGGwk.', '.kwbbbbwwwwwwwk.',
       '.kwbbbbwGGGGGwk.', '.kwbbbbwwwwwwwk.', '.kwwwwwwwwwwwwk.', '.kwGGGGGGGGGGwk.',
       '.kwwwwwwwwwwwwk.', '.kwGGGGGGGwwwwk.', '.kkkkkkkkkkkkkk.', '................'
+    ],
+    brain: [
+      '................', '....kkkkkkkk....', '..kkppppppppkk..', '.kppPppppPppppk.',
+      '.kpppPppppPpppk.', '.kpPppPpppPPppk.', '.kppppPppPpppPk.', '.kpPpppPpppPppk.',
+      '.kppPppppPpppkk.', '..kkppPpppppk...', '....kkkkpppk....', '.........kpk....',
+      '.........kpk....', '..........k.....', '................', '................'
     ],
     calendar: [
       '................', '....kk....kk....', '.kkkkkkkkkkkkkk.', '.krrrrrrrrrrrrk.',
@@ -1195,6 +1213,7 @@ html.mode-scroll #win-figure {
       cap: 'From a neural recording to a speech waveform: brain content and frame encoders, a deep-HMM aligner that finds phoneme segments, and a flow-based speech decoder. No text is decoded along the way.' },
     { t: 'StyleInstructCaps', v: 'AACL 2026', d: 'The first benchmark for controllable speaking-style captioning in audio-language models: a 2.9k-hour corpus, six caption types per utterance and a human-validated LLM judge.', u: 'https://styleinstructcaps.github.io/', lt: 'Visit the website ↗',
       img: 'projects/styleinstructcaps.webp', alt: 'StyleInstructCaps benchmark overview with LLM judges and speaker-style consistency analysis',
+      media: [['sic-talk', '▶ Watch the AACL talk'], ['sic-poster', 'Poster']],
       cap: 'How the benchmark evaluates captions: LLM judges for faithfulness to the speech metadata (A), hallucinations (B) and instruction following (C), generalization to unseen datasets and prompts (D), and speaker-style consistency through speaker verification and caption clustering (E).' },
     { t: 'EmotionRankCLAP', v: 'Interspeech 2025', d: 'A contrastive language-audio model that aligns natural-language speaking-style captions with emotional speech using Rank-N-Contrast over valence and arousal, preserving the ordinal structure of emotion.', u: 'https://arxiv.org/abs/2505.23732',
       img: 'projects/emotionrankclap.webp', alt: 'EmotionRankCLAP diagram of speech and caption pairs ranked by valence and arousal',
@@ -1246,7 +1265,7 @@ html.mode-scroll #win-figure {
       <header class="card-title"><h3>${p.t}</h3><span class="card-venue">${p.v}</span></header>
       <div class="card-main">
         ${p.img ? `<button class="card-fig" data-fig="${i}" aria-label="Enlarge the ${p.t} figure"><img src="${p.img}" alt="${p.alt}" loading="lazy"></button>` : '<div class="card-fig is-empty">Figure coming soon</div>'}
-        <div class="card-text"><p>${p.d}</p>${p.u ? link(p.u, p.lt || 'Read the paper ↗', 'card-link') : '<span class="card-link muted">Website coming soon</span>'}</div>
+        <div class="card-text"><p>${p.d}</p>${p.u ? link(p.u, p.lt || 'Read the paper ↗', 'card-link') : '<span class="card-link muted">Website coming soon</span>'}${p.media ? `<div class="card-media">${p.media.map(([k, label]) => `<button class="btn btn-small" data-media="${k}">${label}</button>`).join('')}</div>` : ''}</div>
       </div>
     </article>`).join('');
   $('#interests').innerHTML = INTERESTS.map(t => `<li><span class="folder">${pixelSVG(ICONS.folder)}</span><span>${t}</span></li>`).join('');
@@ -1591,16 +1610,50 @@ html.mode-scroll #win-figure {
   setInterval(tick, 15000);
 
   /* ---------- figure viewer ---------- */
+  // Talks and posters open in the same viewer as the project figures.
+  const MEDIA = {
+    'sic-talk': {
+      title: 'StyleInstructCaps talk, AACL-IJCNLP 2026', video: 'talks/styleinstructcaps-aacl2026.mp4', still: 'talks/styleinstructcaps-aacl2026-still.jpg',
+      cap: 'My AACL-IJCNLP 2026 talk on StyleInstructCaps, about 11 minutes. <a href="talks/styleinstructcaps-aacl2026-poster.pdf" target="_blank" rel="noopener">Poster (PDF) ↗</a> <a href="https://styleinstructcaps.github.io/" target="_blank" rel="noopener">Project page ↗</a>'
+    },
+    'sic-poster': {
+      title: 'StyleInstructCaps poster, AACL-IJCNLP 2026', img: 'talks/styleinstructcaps-aacl2026-poster.webp',
+      alt: 'StyleInstructCaps poster: speaking-style captioning, the five evaluation axes, the StyleInstructCaps-DB dataset and key results',
+      cap: 'My poster for AACL-IJCNLP 2026. <a href="talks/styleinstructcaps-aacl2026-poster.pdf" target="_blank" rel="noopener">Open the full-size PDF ↗</a>'
+    }
+  };
+  function openMedia(m, from) {
+    const img = $('#fig-img'), vid = $('#fig-video');
+    vid.pause();
+    if (m.video) {
+      img.hidden = true;
+      img.removeAttribute('src');
+      vid.hidden = false;
+      vid.poster = m.still || '';
+      if (vid.getAttribute('src') !== m.video) vid.src = m.video;
+    } else {
+      if (vid.getAttribute('src')) { vid.removeAttribute('src'); vid.load(); }
+      vid.hidden = true;
+      img.hidden = false;
+      img.src = m.img;
+      img.alt = m.alt || '';
+    }
+    $('#t-figure').textContent = m.title;
+    if (m.capHTML) $('#fig-cap').innerHTML = m.capHTML; else $('#fig-cap').textContent = m.cap;
+    openWin('figure', from);
+  }
   function openFigure(i, from) {
     const p = PROJECTS[i];
     if (!p || !p.img) return;
-    const img = $('#fig-img');
-    img.src = p.img;
-    img.alt = p.alt;
-    $('#t-figure').textContent = `${p.t} figure`;
-    $('#fig-cap').textContent = p.cap;
-    openWin('figure', from);
+    openMedia({ img: p.img, alt: p.alt, title: `${p.t} figure`, cap: p.cap }, from);
   }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-media]');
+    if (!b || !MEDIA[b.dataset.media]) return;
+    const m = MEDIA[b.dataset.media];
+    openMedia({ ...m, cap: undefined, capHTML: m.cap }, b);
+  });
+  winById.figure.addEventListener('winclose', () => $('#fig-video').pause());
   $('#cards').addEventListener('click', e => { const b = e.target.closest('[data-fig]'); if (b) openFigure(+b.dataset.fig, b); });
 
   /* ---------- reflections: a tiny browser with its own history ---------- */
