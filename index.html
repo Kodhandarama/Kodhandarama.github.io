@@ -11,7 +11,7 @@
 <style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); } img { max-width: 100%; }</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400..700&family=VT323&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Pixelify+Sans:wght@400..700&family=VT323&family=Caveat:wght@500;700&display=swap">
 <style>
 :root {
   /* Layout: a 1991 desktop. Menu bar on top, icons down the right edge, overlapping windows you drag, resize and close. */
@@ -592,7 +592,8 @@ html.mode-scroll #win-reflections { order: 4; }
 html.mode-scroll #win-cv { order: 5; }
 html.mode-scroll #win-music { order: 6; }
 html.mode-scroll #win-garden { order: 7; }
-html.mode-scroll #win-beyond { order: 8; }
+html.mode-scroll #win-postcards { order: 8; }
+html.mode-scroll #win-beyond { order: 9; }
 html.mode-scroll #win-figure {
   position: fixed !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%);
   width: min(1000px, calc(100vw - 32px)) !important; height: auto !important; max-height: calc(100vh - 48px) !important;
@@ -608,6 +609,82 @@ html.mode-scroll #win-figure {
   html.mode-scroll .win:not(#win-figure) .win-name { font-size: 26px; }
   html.mode-scroll #win-reflections .win-body.web { padding: 18px 16px 24px; }
 }
+/* ---------- postcards ---------- */
+:root { --card: #fffdf6; --pen: #24357a; --pm-ink: rgba(30, 40, 100, .72); --f-hand: "Caveat", "Bradley Hand", "Segoe Print", cursive; }
+#win-postcards { width: min(1000px, calc(100% - 188px)); height: min(820px, calc(100% - 60px)); }
+#win-postcards .win-body { display: flex; flex-direction: column; }
+.pc-intro { margin: 0 0 18px; font-size: 18px; color: var(--ink-2); }
+.pc-grid { columns: 4 190px; column-gap: 22px; padding: 4px 4px 0; }
+.pc-grid[hidden], .pc-intro[hidden], .pc-view[hidden] { display: none; }
+.pc-thumb {
+  display: block; width: 100%; margin: 0 0 24px; padding: 8px 8px 0; break-inside: avoid;
+  border: 1px solid var(--ink); background: var(--card); box-shadow: 2px 2px 0 var(--ink); color: var(--ink);
+  transform: rotate(var(--tilt, 0deg)); transition: transform .15s ease-out; cursor: pointer; text-align: left;
+}
+.pc-thumb:hover, .pc-thumb:focus-visible { position: relative; z-index: 1; transform: rotate(0deg) scale(1.03); }
+.pc-thumb:focus-visible { outline: 2px dotted var(--ink); outline-offset: 3px; }
+.pc-thumb img { display: block; width: 100%; height: auto; background: var(--chrome); }
+.pc-cap { display: flex; justify-content: space-between; gap: 8px; padding: 6px 1px 7px; font: 500 14px/1.3 var(--f-display); }
+.pc-cap span:last-child { flex: none; color: var(--ink-2); }
+.pc-view { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+.pc-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.pc-bar-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pc-count { font: 500 16px var(--f-display); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.pc-stage { flex: 1; min-height: 260px; container-type: size; display: grid; place-items: center; perspective: 2200px; touch-action: pan-y; }
+.pc-card {
+  position: relative; width: min(calc(100cqw - 8px), calc((100cqh - 8px) * var(--r))); aspect-ratio: var(--r);
+  container-type: size; transform-style: preserve-3d; transition: transform .6s cubic-bezier(.3, .7, .25, 1); cursor: pointer;
+}
+.pc-card.is-flipped { transform: rotateY(180deg); }
+.pc-card:focus-visible { outline: none; }
+.pc-card:focus-visible .pc-face { outline: 2px dotted var(--ink); outline-offset: 4px; }
+.pc-face { position: absolute; inset: 0; background: var(--card); border: 1px solid var(--ink); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.pc-front { padding: 2.6cqmin; box-shadow: 4px 4px 0 var(--ink); }
+.pc-front img { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--chrome); }
+.pc-back {
+  transform: rotateY(180deg); box-shadow: -4px 4px 0 var(--ink); overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1.1fr) 1px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: "msg rule post" "msg rule lines"; gap: 0 4.5cqmin; padding: 8cqmin 5cqmin 6cqmin;
+  background-image: linear-gradient(transparent 0 0);
+}
+.pc-card.is-tall .pc-back { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) 1px auto; grid-template-areas: "post" "msg" "rule" "lines"; gap: 4cqmin 0; padding: 9cqmin 6cqmin 7cqmin; }
+.pc-card.is-tall .pc-hello { font-size: 9.2cqmin; }
+.pc-card.is-tall .pc-text, .pc-card.is-tall .pc-sign { font-size: 6.6cqmin; }
+.pc-card.is-tall .pc-lines { font-size: 5.8cqmin; }
+.pc-label { position: absolute; top: 2.6cqmin; left: 0; right: 0; margin: 0; text-align: center; font: 600 2.6cqmin/1 var(--f-display); letter-spacing: .5em; text-transform: uppercase; color: var(--ink-2); }
+.pc-msg { grid-area: msg; display: flex; flex-direction: column; justify-content: center; min-height: 0; color: var(--pen); font-family: var(--f-hand); }
+.pc-hello { margin: 0 0 2.6cqmin; font-size: 7.4cqmin; font-weight: 700; line-height: 1.02; transform: rotate(-2deg); transform-origin: left; }
+.pc-text { margin: 0 0 2.6cqmin; font-size: 5.4cqmin; font-weight: 500; line-height: 1.18; }
+.pc-sign { margin: 0; font-size: 5.4cqmin; font-weight: 700; }
+.pc-rule { grid-area: rule; background: var(--ink-2); opacity: .45; }
+.pc-post { grid-area: post; position: relative; height: 31cqmin; }
+.pc-stamp-wrap { position: absolute; top: 0; right: 0; filter: drop-shadow(0 0 .5px rgba(0, 0, 0, .7)) drop-shadow(1px 1px 0 rgba(0, 0, 0, .25)); transform: rotate(2deg); }
+.pc-stamp {
+  position: relative; display: block; width: 22cqmin; height: 26.4cqmin; padding: 1.7cqmin; background: #ffffff;
+  -webkit-mask: radial-gradient(circle, transparent .72cqmin, #000 .78cqmin) -1.1cqmin -1.1cqmin / 2.2cqmin 2.2cqmin repeat, linear-gradient(#000 0 0) content-box;
+  mask: radial-gradient(circle, transparent .72cqmin, #000 .78cqmin) -1.1cqmin -1.1cqmin / 2.2cqmin 2.2cqmin repeat, linear-gradient(#000 0 0) content-box;
+}
+.pc-stamp img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pc-stamp span { position: absolute; left: 1.7cqmin; right: 1.7cqmin; bottom: 1.7cqmin; padding: .4cqmin 0; background: rgba(255, 255, 255, .88); color: var(--ink); font: 700 2.2cqmin/1.2 var(--f-display); letter-spacing: .12em; text-align: center; }
+.pc-mark { position: absolute; top: 4.5cqmin; right: 5cqmin; width: 50cqmin; height: auto; overflow: visible; transform: rotate(-9deg); fill: none; stroke: var(--pm-ink); stroke-width: 2.2; mix-blend-mode: multiply; pointer-events: none; }
+.pc-mark text { fill: var(--pm-ink); stroke: none; font: 700 10px var(--f-display); letter-spacing: 1px; text-anchor: middle; }
+.pc-mark .pc-mark-day { font-size: 12px; letter-spacing: .5px; }
+.pc-lines { grid-area: lines; align-self: end; display: grid; gap: 1.4cqmin; color: var(--pen); font: 500 4.8cqmin/1.25 var(--f-hand); }
+.pc-lines span { padding: 0 0 .4cqmin 1cqmin; border-bottom: 1px solid rgba(23, 23, 28, .35); }
+.pc-foot { display: flex; justify-content: space-between; gap: 6px 16px; flex-wrap: wrap; margin: 0; font-size: 17px; color: var(--ink-2); }
+.pc-foot .pc-hint-touch { display: none; }
+@media (pointer: coarse) { .pc-foot .pc-hint-desk { display: none; } .pc-foot .pc-hint-touch { display: inline; } }
+@media (max-width: 700px) {
+  .pc-grid { columns: 2 130px; column-gap: 14px; }
+  .pc-thumb { margin-bottom: 16px; padding: 6px 6px 0; }
+  .pc-cap { font-size: 13px; }
+  .pc-bar { display: grid; grid-template-columns: auto auto; justify-content: space-between; gap: 10px; }
+  .pc-bar-group { grid-column: 1 / -1; grid-row: 2; justify-content: center; }
+  .pc-bar .btn { padding: 6px 12px; }
+  .pc-stage { min-height: 300px; }
+  .pc-foot { font-size: 15px; }
+}
+html.mode-scroll #win-postcards .pc-stage { flex: none; height: min(70vh, 720px); }
 </style>
 </head>
 <body>
@@ -622,7 +699,7 @@ html.mode-scroll #win-figure {
 <header class="s-bar">
   <a class="s-name" href="#win-about">Shreeram Chandra</a>
   <nav class="s-nav" aria-label="Sections">
-    <a href="#win-news">News</a><a href="#win-research">Research</a><a href="#win-reflections">Reflections</a><a href="#win-cv">CV</a><a href="#win-music">Listening</a><a href="#win-garden">Garden</a><a href="#win-beyond">Beyond work</a>
+    <a href="#win-news">News</a><a href="#win-research">Research</a><a href="#win-reflections">Reflections</a><a href="#win-cv">CV</a><a href="#win-music">Listening</a><a href="#win-garden">Garden</a><a href="#win-postcards">Postcards</a><a href="#win-beyond">Beyond work</a>
   </nav>
   <button type="button" class="mode-switch" role="switch" aria-checked="false"><span>Scrollable version</span><span class="mode-switch-track" aria-hidden="true"><span class="mode-switch-knob"></span></span></button>
 </header>
@@ -638,6 +715,7 @@ html.mode-scroll #win-figure {
         <button role="menuitem" data-action="open:reflections">Human-written reflections</button>
         <button role="menuitem" data-action="open:music">Currently Listening.mp3</button>
         <button role="menuitem" data-action="open:garden">Garden.app</button>
+        <button role="menuitem" data-action="open:postcards">Postcards.app</button>
         <button role="menuitem" data-action="open:beyond">Beyond Work.exe</button>
         <button role="menuitem" data-action="open:cv">CV.pdf</button>
       </div>
@@ -722,6 +800,7 @@ html.mode-scroll #win-figure {
     <button class="icon" data-open="reflections"><span class="icon-img" data-icon="browser"></span><span class="icon-label">Human-written reflections</span></button>
     <button class="icon" data-open="music"><span class="icon-img" data-icon="music"></span><span class="icon-label">Currently Listening<wbr>.mp3</span></button>
     <button class="icon" data-open="garden"><span class="icon-img" data-icon="garden"></span><span class="icon-label">Garden<wbr>.app</span></button>
+    <button class="icon" data-open="postcards"><span class="icon-img" data-icon="postcards"></span><span class="icon-label">Postcards<wbr>.app</span></button>
     <button class="icon" data-open="beyond"><span class="icon-img" data-icon="bat"></span><span class="icon-label">Beyond Work<wbr>.exe</span></button>
     <button class="icon" data-open="cv"><span class="icon-img" data-icon="cv"></span><span class="icon-label">CV.pdf</span></button>
   </div>
@@ -945,6 +1024,35 @@ html.mode-scroll #win-figure {
     </div>
   </section>
 
+  <!-- Postcards -->
+  <section class="win" id="win-postcards" data-win="postcards" data-app="Postcards" role="dialog" aria-labelledby="t-postcards" tabindex="-1" hidden>
+    <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-postcards">Postcards.app</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
+    <div class="win-info"><span id="pc-total"></span><span id="pc-range"></span></div>
+    <div class="win-body">
+      <p class="pc-intro" id="pc-intro">Some of my favourite photos, as postcards. Open one and turn it over to read the back.</p>
+      <div class="pc-grid" id="pc-grid"></div>
+      <div class="pc-view" id="pc-view" hidden>
+        <div class="pc-bar">
+          <button class="btn btn-small" id="pc-all">‹ All postcards</button>
+          <div class="pc-bar-group">
+            <span class="pc-count" id="pc-count" aria-live="polite"></span>
+            <button class="btn btn-small" id="pc-prev" aria-label="Previous postcard">◀</button>
+            <button class="btn btn-small" id="pc-flip" aria-pressed="false">Turn over</button>
+            <button class="btn btn-small" id="pc-next" aria-label="Next postcard">▶</button>
+          </div>
+          <button class="btn btn-small" id="pc-share">Copy link</button>
+        </div>
+        <div class="pc-stage" id="pc-stage">
+          <div class="pc-card" id="pc-card" role="button" tabindex="0" aria-label="Postcard. Press to turn it over">
+            <div class="pc-face pc-front"><img id="pc-img" alt=""></div>
+            <div class="pc-face pc-back" id="pc-back"></div>
+          </div>
+        </div>
+        <p class="pc-foot"><span id="pc-caption"></span><span class="pc-hint-desk">Click the card to turn it over · ← → for the next one</span><span class="pc-hint-touch">Tap to turn it over · swipe for the next one</span></p>
+      </div>
+    </div>
+  </section>
+
   <!-- Beyond work -->
   <section class="win" id="win-beyond" data-win="beyond" data-app="Beyond Work" role="dialog" aria-labelledby="t-beyond" tabindex="-1" hidden>
     <header class="win-title"><button class="win-close" aria-label="Close window" title="Close"></button><h2 class="win-name" id="t-beyond">Beyond Work.exe</h2><button class="win-zoom" aria-label="Zoom window" title="Zoom"></button></header>
@@ -1148,6 +1256,12 @@ html.mode-scroll #win-figure {
       '......k......k..', '......k......k..', '...kkkk...kkkk..', '..kkkkk..kkkkk..',
       '..kkkkk..kkkkk..', '...kkk....kkk...', '................', '................'
     ],
+    postcards: [
+      '................', '...kkkkkkkkkkkkk', '...kccccccccrrrk', '...kccccccccrprk',
+      'kkkkkkkkkkkkkrrk', 'kwwwwwwwwwwwkcck', 'kwFFFFFFyyFwkcck', 'kwFFFFFFyyFwkcck',
+      'kwFFFeFFFFFwkcck', 'kwFFeeeFFeFwkcck', 'kwFeeeeEeeewkcck', 'kwbbbbbbbbbwkkkk',
+      'kwbwbbbbwbbwk...', 'kwwwwwwwwwwwk...', 'kkkkkkkkkkkkk...', '................'
+    ],
     garden: [
       '................', '................', '..eee......eee..', '.eeeee....eeeee.',
       '.eeeeee..eeeeee.', '..eeeeeeeeeeee..', '...eeeeEEeeee...', '.......EE.......',
@@ -1334,7 +1448,7 @@ html.mode-scroll #win-figure {
   /* ---------- windows ---------- */
   const wins = $$('.win');
   const winById = Object.fromEntries(wins.map(w => [w.dataset.win, w]));
-  const DEFAULTS = { about: [.015, 16], news: [.62, 64], research: [.25, 36], reflections: [.28, 36], figure: [.1, 24], music: [.5, 90], garden: [.22, 84], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
+  const DEFAULTS = { about: [.015, 16], news: [.62, 64], research: [.25, 36], reflections: [.28, 36], figure: [.1, 24], music: [.5, 90], garden: [.22, 84], postcards: [.16, 30], beyond: [.14, 52], cv: [.34, 26], trash: [.46, 120] };
   const openers = {};
   let zTop = 10;
 
@@ -1428,7 +1542,7 @@ html.mode-scroll #win-figure {
     if (narrow() && history.state && history.state.win === w.dataset.win) history.back();
     else closeWin(w);
   }
-  addEventListener('popstate', () => { if (narrow()) { const t = topVisible(); if (t) closeWin(t, true); } });
+  addEventListener('popstate', () => { if (narrow()) { if (pcBackToGrid()) return; const t = topVisible(); if (t) closeWin(t, true); } });
   function zoomWin(w) {
     if (narrow()) return;
     if (w.dataset.zoomed) {
@@ -1605,8 +1719,12 @@ html.mode-scroll #win-figure {
     if (e.key === 'Escape') {
       if (openMenu) closeMenus();
       else if (!$('#alert').hidden) $('#alert').hidden = true;
+      else if (pcActive()) pcLeave();
       else if (scrollMode()) closeWin(winById.figure);
       else closeWin(topVisible());
+    } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && pcActive() && !e.target.closest('input, textarea')) {
+      e.preventDefault();
+      pcShow(pcIndex + (e.key === 'ArrowRight' ? 1 : -1));
     } else if (e.key === ' ' && nets.on && winById.beyond.classList.contains('is-front') && !e.target.closest('button, a, input')) {
       e.preventDefault();
       swing();
@@ -1938,10 +2056,152 @@ html.mode-scroll #win-figure {
   winById.beyond.addEventListener('winclose', stopNets);
   netsDraw();
 
+  /* ---------- postcards: favourite photos you can open and turn over ---------- */
+  // Images live in postcards/ (re-encoded without EXIF, so no GPS ships). Newest first.
+  const POSTCARDS = [
+    {"s": "cat-on-the-pacific", "d": "2026-10-23", "place": "Baltimore, Maryland", "hi": "Baltimore", "pm": "BALTIMORE · MD", "c": "USA", "msg": "A cat napping across a map of the Pacific Ocean.", "alt": "A tabby cat stretched out on its back across an old map of the Pacific Ocean", "wh": [902, 1600]},
+    {"s": "great-ocean-road", "d": "2026-10-02", "place": "Great Ocean Road, Victoria", "hi": "the Great Ocean Road", "pm": "GREAT OCEAN ROAD · VIC", "c": "AUSTRALIA", "msg": "The road winding around the headlands on a grey day in Victoria, Australia.", "alt": "A coastal road curving around a green headland above the sea under a grey sky", "wh": [902, 1600]},
+    {"s": "sydney-shark", "d": "2026-09-27", "place": "Sydney, Australia", "hi": "Sydney", "pm": "SYDNEY · NSW", "c": "AUSTRALIA", "msg": "A shark gliding overhead in the aquarium tunnel.", "alt": "A shark seen from below as it swims over a glass aquarium tunnel", "wh": [902, 1600]},
+    {"s": "black-eyed-susans", "d": "2026-09-19", "place": "Baltimore, Maryland", "hi": "Baltimore", "pm": "BALTIMORE · MD", "c": "USA", "msg": "Black-eyed Susans, the Maryland state flower, in full bloom.", "alt": "Close-up of yellow black-eyed Susan flowers", "wh": [902, 1600]},
+    {"s": "luray-caverns", "d": "2026-09-06", "place": "Luray Caverns, Virginia", "hi": "Luray Caverns", "pm": "LURAY · VA", "c": "USA", "msg": "Stalactites mirrored in still water, deep underground in Virginia.", "alt": "Stalactites in a cave reflected in a still underground pool", "wh": [1600, 902]},
+    {"s": "good-dog", "d": "2026-08-31", "place": "Bay Area, California", "hi": "the Bay Area", "pm": "BAY AREA · CA", "c": "USA", "msg": "A very good dog, caught mid-lick.", "alt": "A Cavalier King Charles spaniel with its tongue out, sitting on a lap on a wooden deck", "wh": [902, 1600]},
+    {"s": "mcway-cove", "d": "2026-07-18", "place": "Big Sur, California", "hi": "Big Sur", "pm": "BIG SUR · CA", "c": "USA", "msg": "McWay Cove, where turquoise water meets the cliffs.", "alt": "A small sandy cove with turquoise water below forested cliffs on the Big Sur coast", "wh": [1600, 902]},
+    {"s": "big-sur-rocks", "d": "2026-07-18", "place": "Big Sur, California", "hi": "Big Sur", "pm": "BIG SUR · CA", "c": "USA", "msg": "Waves breaking on the rocks along the coast.", "alt": "Deep blue water and white surf around dark rocks below a cliff", "wh": [902, 1600]},
+    {"s": "pink-sky", "d": "2026-07-11", "place": "Bay Area, California", "hi": "the Bay Area", "pm": "BAY AREA · CA", "c": "USA", "msg": "A cotton-candy sky at dusk.", "alt": "Pink and lavender clouds at dusk above trees and houses", "wh": [902, 1600]},
+    {"s": "cupertino-hills", "d": "2026-06-28", "place": "Cupertino, California", "hi": "Cupertino", "pm": "CUPERTINO · CA", "c": "USA", "msg": "A summer hike in the hills, with a creek far below.", "alt": "A creek in a wooded canyon seen from above under a clear blue sky", "wh": [900, 1600]},
+    {"s": "pacific-sunset", "d": "2026-06-20", "place": "Northern California coast", "hi": "the Northern California coast", "pm": "NORTHERN CALIFORNIA", "c": "USA", "msg": "Sunset on the Pacific, with the moon already up.", "alt": "Two people on a beach silhouetted against the setting sun, with the moon in the sky", "wh": [900, 1600]},
+    {"s": "apple-park", "d": "2026-06-16", "place": "Cupertino, California", "hi": "Cupertino", "pm": "CUPERTINO · CA", "c": "USA", "msg": "Apple Park at dusk, the summer I interned at Apple.", "alt": "The curved glass wall of Apple Park beside a tree-lined path at dusk", "wh": [1200, 1600]},
+    {"s": "seattle-great-wheel", "d": "2026-03-30", "place": "Seattle, Washington", "hi": "Seattle", "pm": "SEATTLE · WA", "c": "USA", "msg": "The Great Wheel and the skyline at dusk, from the waterfront.", "alt": "The lit-up Seattle Great Wheel and downtown skyline at dusk, with a person taking a photo in the foreground", "wh": [1600, 1200]},
+    {"s": "mount-rainier", "d": "2026-03-30", "place": "Puget Sound, Washington", "hi": "Puget Sound", "pm": "PUGET SOUND · WA", "c": "USA", "msg": "Mount Rainier glowing pink at sunset.", "alt": "Snow-covered Mount Rainier lit pink at sunset above dark water and a tree line", "wh": [1200, 1600]},
+    {"s": "camellia", "d": "2026-03-30", "place": "Seattle, Washington", "hi": "Seattle", "pm": "SEATTLE · WA", "c": "USA", "msg": "A camellia in bloom, early in spring.", "alt": "A pale pink camellia flower among glossy green leaves", "wh": [1200, 1600]},
+    {"s": "seattle-rainbow", "d": "2026-03-28", "place": "Seattle, Washington", "hi": "Seattle", "pm": "SEATTLE · WA", "c": "USA", "msg": "A rainbow over the city after the rain.", "alt": "A rainbow arcing over city blocks under grey clouds", "wh": [901, 1600]},
+    {"s": "seattle-sunset", "d": "2026-03-27", "place": "Seattle, Washington", "hi": "Seattle", "pm": "SEATTLE · WA", "c": "USA", "msg": "A pink sunset over the Olympic Mountains, seen from a city street.", "alt": "A bright pink sunset over distant snowy mountains, above a city street with traffic lights", "wh": [1200, 1600]},
+    {"s": "gas-works-park", "d": "2026-03-27", "place": "Seattle, Washington", "hi": "Seattle", "pm": "SEATTLE · WA", "c": "USA", "msg": "Gas Works Park, looking across Lake Union.", "alt": "The old gasworks towers on a grassy hill beside Lake Union", "wh": [640, 480]},
+    {"s": "strait-bench", "d": "2026-03-26", "place": "Olympic Peninsula, Washington", "hi": "the Olympic Peninsula", "pm": "OLYMPIC PENINSULA · WA", "c": "USA", "msg": "A bench looking out over the Strait of Juan de Fuca.", "alt": "A person on a bench under a big tree, looking out over water and distant mountains", "wh": [1200, 1600]},
+    {"s": "olympic-lake", "d": "2026-03-26", "place": "Olympic Peninsula, Washington", "hi": "the Olympic Peninsula", "pm": "OLYMPIC PENINSULA · WA", "c": "USA", "msg": "Clear green water below forested peaks.", "alt": "Clear emerald lake water below steep forested mountains, with a small white boat", "wh": [1200, 1600]},
+    {"s": "olympic-treetops", "d": "2026-03-26", "place": "Olympic Peninsula, Washington", "hi": "the Olympic Peninsula", "pm": "OLYMPIC PENINSULA · WA", "c": "USA", "msg": "Looking straight up through the treetops.", "alt": "Tall conifer trunks seen from below, converging toward the sky", "wh": [1200, 1600]},
+    {"s": "olympic-gorge", "d": "2026-03-25", "place": "Olympic Peninsula, Washington", "hi": "the Olympic Peninsula", "pm": "OLYMPIC PENINSULA · WA", "c": "USA", "msg": "A creek rushing through a mossy gorge, with snow on the banks.", "alt": "A rushing creek in a narrow mossy gorge between tall evergreens, with patches of snow", "wh": [1200, 1600]},
+    {"s": "baltimore-snow", "d": "2026-01-26", "place": "Baltimore, Maryland", "hi": "Baltimore", "pm": "BALTIMORE · MD", "c": "USA", "msg": "Fresh snow on campus at dusk.", "alt": "A snow-covered lawn leading to a brick building with a white cupola at dusk", "wh": [1200, 1600]},
+    {"s": "puri-crafts", "d": "2026-01-04", "place": "Puri, Odisha", "hi": "Puri", "pm": "PURI · ODISHA", "c": "INDIA", "msg": "Jagannath figures and pattachitra paintings at a crafts stall.", "alt": "A colourful crafts stall full of Jagannath figures, framed pattachitra paintings and hanging decorations", "wh": [1200, 1600]},
+    {"s": "mountain-lake", "d": "2025-08-02", "place": "", "hi": "the mountains", "pm": "SHREERAM OS POST", "c": "USA", "msg": "Alpenglow on the peaks, mirrored in a still lake.", "alt": "Mountains lit orange at sunset, reflected in a still lake", "wh": [1600, 716]},
+    {"s": "santa-barbara-surfers", "d": "2025-07-20", "place": "Santa Barbara, California", "hi": "Santa Barbara", "pm": "SANTA BARBARA · CA", "c": "USA", "msg": "Two surfers sharing one small wave.", "alt": "Two surfers standing on their boards on the same small wave", "wh": [1200, 1600]},
+    {"s": "vandenberg-launch", "d": "2025-07-18", "place": "Santa Barbara, California", "hi": "Santa Barbara", "pm": "SANTA BARBARA · CA", "c": "USA", "msg": "A rocket launch from Vandenberg lighting up the night sky.", "alt": "A glowing rocket plume trailing across a dark night sky", "wh": [1200, 1600]}
+  ];
+  const pcDate = (d, o) => new Date(d + 'T12:00:00').toLocaleDateString('en-US', o);
+  const PC_TILT = [-1.6, 1.1, -.7, 1.7, -1.2, .6, 1.4, -1.8, .9];
+  const pcGridEl = $('#pc-grid'), pcView = $('#pc-view'), pcCard = $('#pc-card'), pcFlipBtn = $('#pc-flip');
+  let pcIndex = -1;
+  $('#pc-total').textContent = `${POSTCARDS.length} postcards · newest first`;
+  $('#pc-range').textContent = `${pcDate(POSTCARDS[POSTCARDS.length - 1].d, { month: 'short', year: 'numeric' })} – ${pcDate(POSTCARDS[0].d, { month: 'short', year: 'numeric' })}`;
+  pcGridEl.innerHTML = POSTCARDS.map((p, i) => `
+    <button class="pc-thumb" data-pc="${i}" style="--tilt:${PC_TILT[i % PC_TILT.length]}deg">
+      <img src="postcards/${p.s}-sm.webp" alt="${p.alt}" width="${p.wh[0]}" height="${p.wh[1]}" loading="lazy" decoding="async">
+      <span class="pc-cap"><span>${p.place ? p.place.split(',')[0] : 'A mountain lake'}</span><span>${pcDate(p.d, { month: 'short', year: 'numeric' })}</span></span>
+    </button>`).join('');
+
+  function pcPostmark(p) {
+    const day = pcDate(p.d, { day: '2-digit' }), mon = pcDate(p.d, { month: 'short' }).toUpperCase(), yr = p.d.slice(0, 4);
+    const waves = [30, 42, 54, 66].map(y => `<path d="M104 ${y} q7.5 -6 15 0 t15 0 t15 0 t15 0 t15 0 t15 0 t15 0"/>`).join('');
+    return `<svg class="pc-mark" viewBox="0 0 220 100" aria-hidden="true">
+      <defs><path id="pc-ring" d="M50,84 a34,34 0 1,1 0,-68 a34,34 0 1,1 0,68"/></defs>
+      <circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="27"/>
+      <text><textPath href="#pc-ring" startOffset="50%">${p.pm}</textPath></text>
+      <text class="pc-mark-day" x="50" y="48">${day} ${mon}</text><text class="pc-mark-day" x="50" y="63">${yr}</text>${waves}</svg>`;
+  }
+  function pcBack(p) {
+    return `<p class="pc-label">Post card</p>
+      <div class="pc-msg"><p class="pc-hello">Greetings from ${p.hi}!</p><p class="pc-text">${p.msg}</p><p class="pc-sign">— Shreeram</p></div>
+      <div class="pc-rule"></div>
+      <div class="pc-post"><span class="pc-stamp-wrap"><span class="pc-stamp"><img src="postcards/${p.s}-sm.webp" alt=""><span>${p.c}</span></span></span>${pcPostmark(p)}</div>
+      <div class="pc-lines"><span>To: you,</span><span>wherever you are</span><span>reading this</span></div>`;
+  }
+  function pcSetFlip(on) {
+    pcCard.classList.toggle('is-flipped', on);
+    pcFlipBtn.setAttribute('aria-pressed', String(on));
+    pcFlipBtn.textContent = on ? 'Turn back' : 'Turn over';
+  }
+  function pcShow(i, push) {
+    const n = POSTCARDS.length;
+    i = (i % n + n) % n;
+    const p = POSTCARDS[i], first = pcIndex < 0;
+    pcIndex = i;
+    pcSetFlip(false);
+    pcCard.classList.toggle('is-tall', p.wh[1] > p.wh[0]);
+    pcCard.style.setProperty('--r', (p.wh[0] / p.wh[1]).toFixed(4));
+    $('#pc-img').src = `postcards/${p.s}.webp`;
+    $('#pc-img').alt = p.alt;
+    $('#pc-back').innerHTML = pcBack(p);
+    $('#pc-count').textContent = `${i + 1} of ${n}`;
+    $('#pc-caption').textContent = [p.place, pcDate(p.d, { month: 'long', day: 'numeric', year: 'numeric' })].filter(Boolean).join(' · ');
+    if (first) {
+      pcGridEl.hidden = true;
+      $('#pc-intro').hidden = true;
+      pcView.hidden = false;
+      $('.win-body', winById.postcards).scrollTop = 0;
+      if (scrollMode()) winById.postcards.scrollIntoView({ block: 'start' });
+      else if (push && narrow()) history.pushState({ win: 'postcards', pc: i }, '');
+      pcCard.focus({ preventScroll: true });
+    }
+    [i - 1, i + 1].forEach(k => { new Image().src = `postcards/${POSTCARDS[(k % n + n) % n].s}.webp`; });
+  }
+  function pcGrid() {
+    if (pcIndex < 0) return;
+    const i = pcIndex;
+    pcIndex = -1;
+    pcView.hidden = true;
+    pcGridEl.hidden = false;
+    $('#pc-intro').hidden = false;
+    const t = $(`[data-pc="${i}"]`, pcGridEl);
+    if (t && !winById.postcards.hidden) { t.scrollIntoView({ block: 'nearest' }); t.focus({ preventScroll: true }); }
+  }
+  // "All postcards", Escape: on phones the open postcard is a history entry, so go back through it.
+  function pcLeave() {
+    if (narrow() && !scrollMode() && history.state && history.state.pc != null) history.back();
+    else pcGrid();
+  }
+  function pcBackToGrid() {
+    if (pcIndex >= 0 && !winById.postcards.hidden && topVisible() === winById.postcards) { pcGrid(); return true; }
+    return false;
+  }
+  function pcActive() {
+    return pcIndex >= 0 && !winById.postcards.hidden && (scrollMode() ? winById.figure.hidden : topVisible() === winById.postcards);
+  }
+  pcGridEl.addEventListener('click', e => { const b = e.target.closest('[data-pc]'); if (b) pcShow(+b.dataset.pc, true); });
+  $('#pc-all').addEventListener('click', pcLeave);
+  $('#pc-prev').addEventListener('click', () => pcShow(pcIndex - 1));
+  $('#pc-next').addEventListener('click', () => pcShow(pcIndex + 1));
+  pcFlipBtn.addEventListener('click', () => pcSetFlip(!pcCard.classList.contains('is-flipped')));
+  pcCard.addEventListener('click', () => pcSetFlip(!pcCard.classList.contains('is-flipped')));
+  pcCard.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pcSetFlip(!pcCard.classList.contains('is-flipped')); } });
+  let pcTouch = null;
+  $('#pc-stage').addEventListener('touchstart', e => { const t = e.touches[0]; pcTouch = [t.clientX, t.clientY]; }, { passive: true });
+  $('#pc-stage').addEventListener('touchend', e => {
+    if (!pcTouch) return;
+    const t = e.changedTouches[0], dx = t.clientX - pcTouch[0], dy = t.clientY - pcTouch[1];
+    pcTouch = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > 1.5 * Math.abs(dy)) pcShow(pcIndex + (dx < 0 ? 1 : -1));
+  });
+  $('#pc-share').textContent = canShare() ? 'Share' : 'Copy link';
+  $('#pc-share').addEventListener('click', async e => {
+    const p = POSTCARDS[pcIndex], url = location.origin + location.pathname + '#postcards/' + p.s;
+    if (canShare()) {
+      try { await navigator.share({ title: `Postcard from ${p.hi}`, url }); return; } catch (err) { if (err && err.name === 'AbortError') return; }
+    }
+    try { await navigator.clipboard.writeText(url); toast('Link copied'); flash(e.currentTarget || $('#pc-share'), 'Copied!'); }
+    catch (err) { history.replaceState(history.state, '', '#postcards/' + p.s); toast('The link is in the address bar'); }
+  });
+  winById.postcards.addEventListener('winclose', () => {
+    if (pcIndex < 0) return;
+    pcIndex = -1;
+    pcView.hidden = true;
+    pcGridEl.hidden = false;
+    $('#pc-intro').hidden = false;
+  });
+
   /* ---------- desktop or scrollable version ---------- */
   const VIEW_KEY = 'shreeram-site-view';
   // Section headings in the scrollable version drop the app-style file names.
-  const PLAIN = { about: 'About', news: 'News', research: 'Research', reflections: 'Human-written reflections', cv: 'CV', music: 'Currently listening', garden: 'Garden', beyond: 'Beyond work' };
+  const PLAIN = { about: 'About', news: 'News', research: 'Research', reflections: 'Human-written reflections', cv: 'CV', music: 'Currently listening', garden: 'Garden', postcards: 'Postcards', beyond: 'Beyond work' };
   function syncModeUI() {
     const on = scrollMode();
     $$('.mode-switch').forEach(b => b.setAttribute('aria-checked', String(on)));
@@ -2004,6 +2264,10 @@ html.mode-scroll #win-figure {
     if (hashWin === 'reflections' && hashSlug) {
       const id = Object.keys(PAGES).find(k => PAGES[k].path === `reflections/${hashSlug}/`);
       if (id) showPage(id, true);
+    }
+    if (hashWin === 'postcards' && hashSlug) {
+      const k = POSTCARDS.findIndex(p => p.s === hashSlug);
+      if (k >= 0) pcShow(k, true);
     }
   }
 })();
