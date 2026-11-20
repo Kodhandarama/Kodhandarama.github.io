@@ -623,6 +623,10 @@ html.mode-scroll #win-figure {
 }
 .pc-thumb:hover, .pc-thumb:focus-visible { position: relative; z-index: 1; transform: rotate(0deg) scale(1.03); }
 .pc-thumb:focus-visible { outline: 2px dotted var(--ink); outline-offset: 3px; }
+.pc-thumb { position: relative; }
+.pc-live { position: absolute; top: 14px; left: 14px; padding: 1px 7px; border: 1px solid var(--ink); background: rgba(255, 255, 255, .9); font: 600 12px/1.4 var(--f-display); letter-spacing: .08em; text-transform: uppercase; }
+.pc-live::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; background: #d1462f; vertical-align: 1px; }
+.pc-front video { position: absolute; left: 2.6cqmin; top: 2.6cqmin; width: calc(100% - 5.2cqmin); height: calc(100% - 5.2cqmin); object-fit: cover; }
 .pc-thumb img { display: block; width: 100%; height: auto; background: var(--chrome); }
 .pc-cap { display: flex; justify-content: space-between; gap: 8px; padding: 6px 1px 7px; font: 500 14px/1.3 var(--f-display); }
 .pc-cap span:last-child { flex: none; color: var(--ink-2); }
@@ -1044,7 +1048,7 @@ html.mode-scroll #win-postcards .pc-stage { flex: none; height: min(70vh, 720px)
         </div>
         <div class="pc-stage" id="pc-stage">
           <div class="pc-card" id="pc-card" role="button" tabindex="0" aria-label="Postcard. Press to turn it over">
-            <div class="pc-face pc-front"><img id="pc-img" alt=""></div>
+            <div class="pc-face pc-front"><img id="pc-img" alt=""><video id="pc-vid" muted loop playsinline preload="none" disablepictureinpicture aria-hidden="true" hidden></video></div>
             <div class="pc-face pc-back" id="pc-back"></div>
           </div>
         </div>
@@ -2085,17 +2089,36 @@ html.mode-scroll #win-postcards .pc-stage { flex: none; height: min(70vh, 720px)
     {"s": "puri-crafts", "d": "2026-01-04", "place": "Puri, Odisha", "hi": "Puri", "pm": "PURI · ODISHA", "c": "INDIA", "msg": "Jagannath figures and pattachitra paintings at a crafts stall.", "alt": "A colourful crafts stall full of Jagannath figures, framed pattachitra paintings and hanging decorations", "wh": [1200, 1600]},
     {"s": "mountain-lake", "d": "2025-08-02", "place": "", "hi": "the mountains", "pm": "SHREERAM OS POST", "c": "USA", "msg": "Alpenglow on the peaks, mirrored in a still lake.", "alt": "Mountains lit orange at sunset, reflected in a still lake", "wh": [1600, 716]},
     {"s": "santa-barbara-surfers", "d": "2025-07-20", "place": "Santa Barbara, California", "hi": "Santa Barbara", "pm": "SANTA BARBARA · CA", "c": "USA", "msg": "Two surfers sharing one small wave.", "alt": "Two surfers standing on their boards on the same small wave", "wh": [1200, 1600]},
-    {"s": "vandenberg-launch", "d": "2025-07-18", "place": "Santa Barbara, California", "hi": "Santa Barbara", "pm": "SANTA BARBARA · CA", "c": "USA", "msg": "A rocket launch from Vandenberg lighting up the night sky.", "alt": "A glowing rocket plume trailing across a dark night sky", "wh": [1200, 1600]}
+    {"s": "vandenberg-launch", "d": "2025-07-18", "place": "Santa Barbara, California", "hi": "Santa Barbara", "pm": "SANTA BARBARA · CA", "c": "USA", "msg": "A rocket launch from Vandenberg lighting up the night sky.", "alt": "A glowing rocket plume trailing across a dark night sky", "wh": [1200, 1600]},
+    {"s": "yosemite-falls", "d": "2024-05-11", "place": "Yosemite, California", "hi": "Yosemite", "pm": "YOSEMITE · CA", "c": "USA", "msg": "Yosemite Falls in full spring flow, under a pink evening sky.", "alt": "A tall waterfall pouring down a granite cliff under pink clouds", "live": "postcards/yosemite-falls.mp4", "wh": [1200, 1600]},
+    {"s": "tigers-nest", "d": "2023-12-12", "place": "Paro, Bhutan", "hi": "Bhutan", "pm": "PARO · BHUTAN", "c": "BHUTAN", "msg": "Tiger's Nest monastery, clinging to the cliffs above the Paro valley.", "alt": "A white monastery built into a sheer forested cliff under a blue sky", "wh": [1205, 1600]},
+    {"s": "everglades-cormorant", "d": "2023-11-20", "place": "Everglades, Florida", "hi": "the Everglades", "pm": "EVERGLADES · FL", "c": "USA", "msg": "A double-crested cormorant posing against a clear blue sky.", "alt": "A dark cormorant with an orange face perched against a clear blue sky", "wh": [1205, 1600]},
+    {"s": "zion-canyon", "d": "2022-12-19", "place": "Zion National Park, Utah", "hi": "Zion", "pm": "ZION · UT", "c": "USA", "msg": "Fresh snow below sunlit red cliffs in Zion Canyon.", "alt": "Red sandstone cliffs lit by the sun above a snowy canyon slope", "wh": [1600, 901]},
+    {"s": "antelope-canyon", "d": "2022-12-18", "place": "Antelope Canyon, Arizona", "hi": "Antelope Canyon", "pm": "PAGE · AZ", "c": "USA", "msg": "Looking up through the swirling sandstone walls.", "alt": "Smooth, swirling orange sandstone walls opening to a sliver of sky", "wh": [1205, 1600]}
   ];
   const pcDate = (d, o) => new Date(d + 'T12:00:00').toLocaleDateString('en-US', o);
   const PC_TILT = [-1.6, 1.1, -.7, 1.7, -1.2, .6, 1.4, -1.8, .9];
   const pcGridEl = $('#pc-grid'), pcView = $('#pc-view'), pcCard = $('#pc-card'), pcFlipBtn = $('#pc-flip');
   let pcIndex = -1;
+  const pcVid = $('#pc-vid');
+  // Live Photos play as moving postcards (muted, looping); a still for reduced motion.
+  function pcVideo(p) {
+    if (p && p.live && !reduceMotion) {
+      pcVid.poster = `postcards/${p.s}.webp`;
+      if (pcVid.getAttribute('src') !== p.live) pcVid.src = p.live;
+      pcVid.hidden = false;
+      pcVid.play().catch(() => {});
+    } else {
+      pcVid.pause();
+      if (pcVid.getAttribute('src')) { pcVid.removeAttribute('src'); pcVid.load(); }
+      pcVid.hidden = true;
+    }
+  }
   $('#pc-total').textContent = `${POSTCARDS.length} postcards · newest first`;
   $('#pc-range').textContent = `${pcDate(POSTCARDS[POSTCARDS.length - 1].d, { month: 'short', year: 'numeric' })} – ${pcDate(POSTCARDS[0].d, { month: 'short', year: 'numeric' })}`;
   pcGridEl.innerHTML = POSTCARDS.map((p, i) => `
     <button class="pc-thumb" data-pc="${i}" style="--tilt:${PC_TILT[i % PC_TILT.length]}deg">
-      <img src="postcards/${p.s}-sm.webp" alt="${p.alt}" width="${p.wh[0]}" height="${p.wh[1]}" loading="lazy" decoding="async">
+      <img src="postcards/${p.s}-sm.webp" alt="${p.alt}" width="${p.wh[0]}" height="${p.wh[1]}" loading="lazy" decoding="async">${p.live ? '<span class="pc-live">Live</span>' : ''}
       <span class="pc-cap"><span>${p.place ? p.place.split(',')[0] : 'A mountain lake'}</span><span>${pcDate(p.d, { month: 'short', year: 'numeric' })}</span></span>
     </button>`).join('');
 
@@ -2119,6 +2142,7 @@ html.mode-scroll #win-postcards .pc-stage { flex: none; height: min(70vh, 720px)
     pcCard.classList.toggle('is-flipped', on);
     pcFlipBtn.setAttribute('aria-pressed', String(on));
     pcFlipBtn.textContent = on ? 'Turn back' : 'Turn over';
+    if (!pcVid.hidden) { if (on) pcVid.pause(); else pcVid.play().catch(() => {}); }
   }
   function pcShow(i, push) {
     const n = POSTCARDS.length;
@@ -2130,9 +2154,10 @@ html.mode-scroll #win-postcards .pc-stage { flex: none; height: min(70vh, 720px)
     pcCard.style.setProperty('--r', (p.wh[0] / p.wh[1]).toFixed(4));
     $('#pc-img').src = `postcards/${p.s}.webp`;
     $('#pc-img').alt = p.alt;
+    pcVideo(p);
     $('#pc-back').innerHTML = pcBack(p);
     $('#pc-count').textContent = `${i + 1} of ${n}`;
-    $('#pc-caption').textContent = [p.place, pcDate(p.d, { month: 'long', day: 'numeric', year: 'numeric' })].filter(Boolean).join(' · ');
+    $('#pc-caption').textContent = [p.place, pcDate(p.d, { month: 'long', day: 'numeric', year: 'numeric' }), p.live && !reduceMotion ? 'Live Photo' : ''].filter(Boolean).join(' · ');
     if (first) {
       pcGridEl.hidden = true;
       $('#pc-intro').hidden = true;
@@ -2148,6 +2173,7 @@ html.mode-scroll #win-postcards .pc-stage { flex: none; height: min(70vh, 720px)
     if (pcIndex < 0) return;
     const i = pcIndex;
     pcIndex = -1;
+    pcVideo(null);
     pcView.hidden = true;
     pcGridEl.hidden = false;
     $('#pc-intro').hidden = false;
@@ -2193,6 +2219,7 @@ html.mode-scroll #win-postcards .pc-stage { flex: none; height: min(70vh, 720px)
   winById.postcards.addEventListener('winclose', () => {
     if (pcIndex < 0) return;
     pcIndex = -1;
+    pcVideo(null);
     pcView.hidden = true;
     pcGridEl.hidden = false;
     $('#pc-intro').hidden = false;
